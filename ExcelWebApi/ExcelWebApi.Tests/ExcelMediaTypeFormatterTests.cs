@@ -29,11 +29,5 @@ namespace ExcelWebApi.Tests
         {
 
         }
-
-        [TestMethod]
-        public void WriteToStreamAsync_WritesExcelDocumentToStream()
-        {
-
-        }
     }
 }
