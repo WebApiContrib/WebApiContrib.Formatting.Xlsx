@@ -1,6 +1,6 @@
 Excel for Web API
 =================
 
-** Currently in alpha. **
+**Currently in alpha.**
 
 An Excel MediaTypeFormatter for ASP.NET Web API.
