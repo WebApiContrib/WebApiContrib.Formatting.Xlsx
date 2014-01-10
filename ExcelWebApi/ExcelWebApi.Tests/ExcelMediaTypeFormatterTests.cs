@@ -7,87 +7,67 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.Serialization;
 using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace ExcelWebApi.Tests
 {
     [TestClass]
     public class ExcelMediaTypeFormatterTests
     {
+        const string XlsMimeType = "application/vnd.ms-excel";
+        const string XlsxMimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
         [TestMethod]
         public void SupportedMediaTypes_SupportsExcelMediaTypes()
         {
             var formatter = new ExcelMediaTypeFormatter();
 
-            Assert.IsTrue(
-                formatter.SupportedMediaTypes.Any(s => s.MediaType == "application/vnd.ms-excel"),
-                "XLS media type not supported."
-            );
+            Assert.IsTrue(formatter.SupportedMediaTypes.Any(s => s.MediaType == XlsMimeType),
+                          "XLS media type not supported.");
 
-            Assert.IsTrue(
-                formatter.SupportedMediaTypes.Any(s => s.MediaType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-                "XLSX media type not supported."
-            );
+            Assert.IsTrue(formatter.SupportedMediaTypes.Any(s => s.MediaType == XlsxMimeType),
+                          "XLSX media type not supported.");
         }
 
         [TestMethod]
         public void CanWriteType_TypeEnumerable_CanWriteType()
         {
             var formatter = new ExcelMediaTypeFormatter();
-            Assert.IsTrue(formatter.CanWriteType(typeof(IEnumerable<object>)), "Cannot write enumerable types.");
+
+            Assert.IsTrue(formatter.CanWriteType(typeof(IEnumerable<object>)),
+                          "Cannot write enumerable types.");
         }
 
         [TestMethod]
         public void CanWriteType_TypeObject_CannotWriteType()
         {
             var formatter = new ExcelMediaTypeFormatter();
-            Assert.IsFalse(formatter.CanWriteType(typeof(object)), "Can write any type.");
+
+            Assert.IsFalse(formatter.CanWriteType(typeof(object)),
+                           "Can write any type.");
         }
 
         [TestMethod]
         public void WriteToStreamAsync_WithGenericCollection_WritesExcelDocumentToStream()
         {
-            var ms = new MemoryStream();
-
-            var content = new FakeContent();
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/atom+xml");
-
             var formatter = new ExcelMediaTypeFormatter();
 
-            var task = formatter.WriteToStreamAsync(typeof(List<TestItem>),
-                new List<TestItem> { new TestItem { Value = "Row 1" }, new TestItem { Value = "Row 2" } },
-                ms,
-                content,
-                new FakeTransport()
-            );
+            var data = new List<TestItem> { new TestItem { Value1 = "2,1", Value2 = "2,2" },
+                                            new TestItem { Value1 = "3,1", Value2 = "3,2" }  };
 
-            task.Wait();
-
-            ms.Seek(0, SeekOrigin.Begin);
-
-            try
-            {
-                var package = new ExcelPackage(ms);
-                var sheet = package.Workbook.Worksheets[1];
-
-                Assert.IsTrue(sheet.Dimension.End.Row == 2, "Worksheet should have two rows.");
-                Assert.IsTrue(sheet.Dimension.End.Column == 1, "Worksheet should have one column.");
-                Assert.IsTrue(sheet.GetValue<string>(1, 1) == "Row 1", "Value in first row is incorrect.");
-                Assert.IsTrue(sheet.GetValue<string>(2, 1) == "Row 2", "Value in second row is incorrect.");
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Could not read stream as an Excel workbook. (Exception: {0})", e.Message);
-            }
+            var sheet = GetWorksheetFromStream(formatter, data);
+            
+            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
+            Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
+            Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Value in first cell is incorrect.");
+            Assert.AreEqual("3,2", sheet.GetValue<string>(3, 2), "Value in last cell is incorrect.");
         }
-
+        
         #region Fakes and test-related classes
-        public class TestItem
-        {
-            public string Value { get; set; }
-        }
-
         public class FakeContent : HttpContent
         {
             public FakeContent() : base() { }
@@ -109,6 +89,30 @@ namespace ExcelWebApi.Tests
             {
                 throw new NotImplementedException();
             }
+        }
+        #endregion
+
+        #region Utilities
+        public ExcelWorksheet GetWorksheetFromStream<TItem>(ExcelMediaTypeFormatter formatter, IEnumerable<TItem> data)
+        {
+            var ms = new MemoryStream();
+
+            var content = new FakeContent();
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/atom+xml");
+
+            var task = formatter.WriteToStreamAsync(typeof(IEnumerable<TItem>),
+                                                    data,
+                                                    ms,
+                                                    content,
+                                                    new FakeTransport());
+
+            task.Wait();
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var package = new ExcelPackage(ms);
+            return package.Workbook.Worksheets[1];
+
         }
         #endregion
     }
