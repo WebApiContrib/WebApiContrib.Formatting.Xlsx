@@ -8,7 +8,7 @@ namespace ExcelWebApi
 {
     public class FormatterUtils
     {
-        protected static BindingFlags InstanceBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        protected const BindingFlags PublicInstanceBindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
         /// <summary>
         /// Get the `Attribute` object of the specified type associated with a member. 
@@ -25,30 +25,49 @@ namespace ExcelWebApi
         }
 
         /// <summary>
-        /// Get the value of the `Order` property specified on a given member.
+        /// Get the value of the `ExcelAttribute.Order` attribute associated with a given
+        /// member. If not found, will default to the `DataMember.Order` value.
         /// </summary>
-        /// <param name="member">The member for which to find the `DataMember.Order` value.</param>
+        /// <param name="member">The member for which to find the `ExcelAttribute.Order` value.</param>
         public static Int32 MemberOrder(MemberInfo member)
         {
+            var excelProperty = GetAttribute<ExcelAttribute>(member);
+            if (excelProperty != null && excelProperty._order.HasValue)
+                return excelProperty.Order;
+
             var dataMember = GetAttribute<DataMemberAttribute>(member);
-            return dataMember.Order;
+            if (dataMember != null)
+                return dataMember.Order;
+
+            return -1;
         }
 
         /// <summary>
-        /// Get a list of all members of a type on which a `DataMemberAttribute` has been
-        /// specified, ordered by the value of the `DataMemberAttribute.Order` value on
-        /// each member.
+        /// Get the value of the `ExcelAttribute.Ignore` attribute associated with a given
+        /// member. If not found, will default to the `DataMember.Ignore` value.
         /// </summary>
-        /// <param name="type">The data contract type on which to look for members.</param>
-        public static List<string> GetDataMemberNames(Type type)
+        /// <param name="member">The member for which to find the `ExcelAttribute.Ignore` value.</param>
+        public static bool IsMemberIgnored(MemberInfo member)
         {
-            var memberInfo =  type.GetProperties(InstanceBindingFlags)
+            var excelProperty = GetAttribute<ExcelAttribute>(member);
+            if (excelProperty != null)
+                return excelProperty.Ignore;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get an ordered list of non-ignored public instance property names of a type.
+        /// </summary>
+        /// <param name="type">The type on which to look for members.</param>
+        public static List<string> GetMemberNames(Type type)
+        {
+            var memberInfo =  type.GetProperties(PublicInstanceBindingFlags)
                                   .OfType<MemberInfo>()
-                                  .Union(type.GetFields(InstanceBindingFlags))
-                                  .ToList();
+                                  .Union(type.GetFields(PublicInstanceBindingFlags));
 
             var memberNames = from p in memberInfo
-                              where Attribute.IsDefined(p, typeof(DataMemberAttribute))
+                              where !IsMemberIgnored(p)
                               orderby MemberOrder(p)
                               select p.Name;
 
@@ -56,22 +75,22 @@ namespace ExcelWebApi
         }
 
         /// <summary>
-        /// Get a list of members on the specified type that have an associated
-        /// `DataMemberAttribute`.
+        /// Get an ordered list of <c>MemberInfo</c> for non-ignored public instance
+        /// properties on the specified type.
         /// </summary>
-        /// <param name="type">The data contract type on which to look for members.</param>
-        public static List<MemberInfo> GetDataMemberInfo(Type type)
+        /// <param name="type">The type on which to look for members.</param>
+        public static List<MemberInfo> GetMemberInfo(Type type)
         {
-            var memberInfo = type.GetProperties(InstanceBindingFlags)
+            var memberInfo = type.GetProperties(PublicInstanceBindingFlags)
                                  .OfType<MemberInfo>()
-                                 .Union(type.GetFields(InstanceBindingFlags));
+                                 .Union(type.GetFields(PublicInstanceBindingFlags));
 
-            var dataMemberInfo = from p in memberInfo
-                                 where Attribute.IsDefined(p, typeof(DataMemberAttribute))
-                                 orderby MemberOrder(p)
-                                 select p;
+            var orderedMemberInfo = from p in memberInfo
+                                    where !IsMemberIgnored(p)
+                                    orderby MemberOrder(p)
+                                    select p;
 
-            return dataMemberInfo.ToList();
+            return orderedMemberInfo.ToList();
         }
 
         /// <summary>

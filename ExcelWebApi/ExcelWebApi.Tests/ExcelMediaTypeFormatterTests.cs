@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ExcelWebApi.Tests.TestData;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -96,6 +98,14 @@ namespace ExcelWebApi.Tests
         public ExcelWorksheet GetWorksheetFromStream<TItem>(ExcelMediaTypeFormatter formatter, IEnumerable<TItem> data)
         {
             var ms = new MemoryStream();
+
+            formatter = new ExcelMediaTypeFormatter(autoFit: true,
+                                                    autoFilter: true,
+                                                    freezeHeader: true,
+                                                    headerHeight: 20.0f,
+                                                    cellHeight: 18f,
+                                                    cellStyle: (ExcelStyle s) => s.WrapText = true,
+                                                    headerStyle: (ExcelStyle s) => s.Border.Bottom.Style = ExcelBorderStyle.Double);
 
             var content = new FakeContent();
             content.Headers.ContentType = new MediaTypeHeaderValue("application/atom+xml");

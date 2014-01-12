@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using ExcelWebApi.Tests.TestData;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -8,13 +9,13 @@ namespace ExcelWebApi.Tests
     public class FormatterUtilsTests
     {
         [TestMethod]
-        public void GetAttribute_DataMemberOfTestItem_ReturnsDataMemberAttribute()
+        public void GetAttribute_ExcelAttributeOfTestItem_ReturnsDataMemberAttribute()
         {
             var value1 = typeof(TestItem).GetMember("Value1")[0];
-            var dataMemberAttributes = FormatterUtils.GetAttribute<DataMemberAttribute>(value1);
+            var excelAttribute = FormatterUtils.GetAttribute<ExcelAttribute>(value1);
 
-            Assert.IsNotNull(dataMemberAttributes);
-            Assert.AreEqual(1, dataMemberAttributes.Order);
+            Assert.IsNotNull(excelAttribute);
+            Assert.AreEqual(1, excelAttribute.Order);
         }
 
         [TestMethod]
@@ -29,20 +30,20 @@ namespace ExcelWebApi.Tests
         }
 
         [TestMethod]
-        public void GetDataMemberNames_TestItem_ReturnsMemberNamesInOrder()
+        public void GetMemberNames_TestItem_ReturnsMemberNamesInOrder()
         {
-            var dataMemberNames = FormatterUtils.GetDataMemberNames(typeof(TestItem));
+            var memberNames = FormatterUtils.GetMemberNames(typeof(TestItem));
 
-            Assert.IsNotNull(dataMemberNames);
-            Assert.AreEqual(2, dataMemberNames.Count);
-            Assert.AreEqual("Value1", dataMemberNames[0]);
-            Assert.AreEqual("Value2", dataMemberNames[1]);
+            Assert.IsNotNull(memberNames);
+            Assert.AreEqual(2, memberNames.Count);
+            Assert.AreEqual("Value1", memberNames[0]);
+            Assert.AreEqual("Value2", memberNames[1]);
         }
 
         [TestMethod]
-        public void GetDataMemberInfo_TestItem_ReturnsMemberInfoList()
+        public void GetMemberInfo_TestItem_ReturnsMemberInfoList()
         {
-            var memberInfo = FormatterUtils.GetDataMemberInfo(typeof(TestItem));
+            var memberInfo = FormatterUtils.GetMemberInfo(typeof(TestItem));
 
             Assert.IsNotNull(memberInfo);
             Assert.AreEqual(2, memberInfo.Count);

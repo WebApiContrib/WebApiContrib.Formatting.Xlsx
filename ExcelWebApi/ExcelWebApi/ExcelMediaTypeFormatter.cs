@@ -17,7 +17,6 @@ namespace ExcelWebApi
     /// <summary>
     /// Class used to send an Excel file to the response.
     /// </summary>
-    /// <remarks>Relies upon <c>DataMember</c> attributes to determine serialization.</remarks>
     public class ExcelMediaTypeFormatter : MediaTypeFormatter
     {
 
@@ -143,7 +142,7 @@ namespace ExcelWebApi
             var itemType = FormatterUtils.GetEnumerableItemType(value);
             if (itemType == null) throw new ArgumentException("Only IEnumerable<T> values can be deserialised using the Excel formatter.");
 
-            var serializableMembers = FormatterUtils.GetDataMemberNames(itemType);
+            var serializableMembers = FormatterUtils.GetMemberNames(itemType);
 
             var metadata = ModelMetadataProviders.Current.GetMetadataForType(null, itemType);
             
@@ -170,11 +169,15 @@ namespace ExcelWebApi
 
                     if (!fieldInfo.Contains(propertyName)) continue;
 
-                    fieldInfo[propertyName].Header = modelProp.DisplayName ?? propertyName;
-                    fieldInfo[propertyName].FormatString = modelProp.DisplayFormatString;
+                    var field = fieldInfo[propertyName];
+
+                    if (!field.IsExcelHeaderDefined)
+                        field.Header = modelProp.DisplayName ?? propertyName;
+
+                    field.FormatString = modelProp.DisplayFormatString;
                 }
             }
-
+            
             if (fields.Count <= 0) return Task.Factory.StartNew(() => package.SaveAs(writeStream));
 
             AppendRow((from f in fieldInfo select f.Header).ToList(), worksheet, ref rowCount);

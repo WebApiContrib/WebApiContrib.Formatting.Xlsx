@@ -12,12 +12,17 @@
             get { return ExcelAttribute != null ? ExcelAttribute.NumberFormat : null; }
         }
 
-        public ExcelFieldInfo(string propertyName, ExcelAttribute excelAttribute = null, string formatString = null, string header = null)
+        public bool IsExcelHeaderDefined
+        {
+            get { return ExcelAttribute != null && !string.IsNullOrEmpty(ExcelAttribute.Header); }
+        }
+
+        public ExcelFieldInfo(string propertyName, ExcelAttribute excelAttribute = null, string formatString = null)
         {
             PropertyName = propertyName;
             ExcelAttribute = excelAttribute;
             FormatString = formatString;
-            Header = header ?? propertyName;
+            Header = IsExcelHeaderDefined ? ExcelAttribute.Header : propertyName;
         }
     }
 }
