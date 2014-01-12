@@ -3,7 +3,7 @@ Excel for Web API
 
 **Currently in alpha.**
 
-An Excel MediaTypeFormatter for ASP.NET Web API.
+An Excel MediaTypeFormatter for ASP.NET Web API. Currently requires that classes be decorated with `DataMember` attributes to determine serialisation, though this will be changed in soon-to-come updates.
 
 
 Basic syntax
