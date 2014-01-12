@@ -34,7 +34,7 @@ Notable issues
 --------------
 
 - Incomplete unit test coverage.
-- Bad documentation—sorry about that! :)
+- Bad documentation—don't worry, I'm working on it!
 
 Future work
 -----------
