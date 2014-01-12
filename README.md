@@ -20,7 +20,7 @@ Advanced options
 var formatter = new ExcelMediaTypeFormatter(autoFit: true,
                                             autoFilter: true,
                                             freezeHeader: true,
-                                            headerHeight: 20.0f,
+                                            headerHeight: 20f,
                                             cellHeight: 18f,
                                             cellStyle: (ExcelStyle s) => s.WrapText = true,
                                             headerStyle: (ExcelStyle s) => s.Border.Bottom.Style = ExcelBorderStyle.Double
