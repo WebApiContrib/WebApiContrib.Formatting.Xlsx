@@ -57,8 +57,8 @@ namespace ExcelWebApi.Tests
         {
             var formatter = new ExcelMediaTypeFormatter();
 
-            var data = new List<TestItem> { new TestItem { Value1 = "2,1", Value2 = "2,2" },
-                                            new TestItem { Value1 = "3,1", Value2 = "3,2" }  };
+            var data = new List<SimpleTestItem> { new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" },
+                                            new SimpleTestItem { Value1 = "3,1", Value2 = "3,2" }  };
 
             var sheet = GetWorksheetFromStream(formatter, data);
             

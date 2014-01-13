@@ -60,6 +60,7 @@ An a lot of bug fixes
 * Fixed issue 14803-Duplicate column names when creating a table caused a corrupt workbook.
 * Fixed issue 14820-Invalid sort order on header footer elements when creating from a template. Added reference to System.Web for Uri decoding</releaseNotes>
     <copyright>Jan Källman</copyright>
+    <language />
     <tags>Excel OOXML</tags>
   </metadata>
 </package>

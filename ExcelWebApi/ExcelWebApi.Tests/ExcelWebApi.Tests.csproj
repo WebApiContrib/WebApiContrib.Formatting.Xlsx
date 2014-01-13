@@ -59,8 +59,8 @@
   <ItemGroup>
     <Compile Include="ExcelMediaTypeFormatterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestData\OrderTestItem.cs" />
-    <Compile Include="TestData\TestItem.cs" />
+    <Compile Include="TestData\ComplexTestItem.cs" />
+    <Compile Include="TestData\SimpleTestItem.cs" />
     <Compile Include="FormatterUtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
