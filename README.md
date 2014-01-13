@@ -13,7 +13,7 @@ Features
 - Lots of formatting options:
   - freeze header rows;
   - add auto-filter;
-  - customize header row and cell styles/heights; or
+  - customize header row and cell styles/heights; and
   - autofit column widths to data.
 - Decent (and improving) unit test coverage.
 
