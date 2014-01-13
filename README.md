@@ -27,7 +27,9 @@ Limitations
 Setting it up
 -------------
 
-Add the `ExcelMediaTypeFormatter` to the formatter collection in your Web API configuration. This will look something like:
+First, you will need to add a reference to **EPPlus** to your project—either [download it from CodePlex][epplus-codeplex] or [grab the package on NuGet][epplus-nuget].
+
+Next, add the `ExcelMediaTypeFormatter` to the formatter collection in your Web API configuration. This will look something like:
 
 ```C#
 config.Formatters.Add(new ExcelMediaTypeFormatter()); // Where config = System.Web.Http.HttpConfiguration.
@@ -161,6 +163,12 @@ Future work
 
 
 <!-- References -->
+
+[epplus-codeplex]:
+  http://epplus.codeplex.com/
+
+[epplus-nuget]:
+  http://www.nuget.org/packages/EPPlus/
 
 [number-format]:
   http://office.microsoft.com/en-001/excel-help/create-a-custom-number-format-HP010342372.aspx
