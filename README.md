@@ -160,6 +160,8 @@ Future work
 - Allow reading from Excel documents.
 - Provide finer control over serialisation of individual properties (e.g. to serialise booleans as "yes" or "no").
 
+Have an idea that you don't see here? Can't figure out how to do something? Would like to use this, but it doesn't cover your needs? Go ahead and open an issue!
+
 
 
 <!-- References -->
