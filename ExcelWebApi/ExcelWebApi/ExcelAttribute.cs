@@ -5,6 +5,7 @@ namespace ExcelWebApi
     [AttributeUsage(AttributeTargets.Property)]
     public class ExcelAttribute : Attribute
     {
+        // Nullable parameters not allowed on attributes. :(
         internal int? _order;
 
         /// <summary>

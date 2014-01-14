@@ -14,7 +14,7 @@
 
         public bool IsExcelHeaderDefined
         {
-            get { return ExcelAttribute != null && !string.IsNullOrEmpty(ExcelAttribute.Header); }
+            get { return ExcelAttribute != null && ExcelAttribute.Header != null; }
         }
 
         public ExcelFieldInfo(string propertyName, ExcelAttribute excelAttribute = null, string formatString = null)
