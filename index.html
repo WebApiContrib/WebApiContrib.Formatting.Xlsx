@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Excel-for-web-api by jordangray</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Excel-for-web-api</h1>
+        <p>An Excel MediaTypeFormatter for ASP.NET Web API.</p>
+
+        <p class="view"><a href="https://github.com/jordangray/Excel-for-Web-API">View the Project on GitHub <small>jordangray/Excel-for-Web-API</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/jordangray/Excel-for-Web-API/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jordangray/Excel-for-Web-API/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jordangray/Excel-for-Web-API">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="excel-for-web-api" class="anchor" href="#excel-for-web-api"><span class="octicon octicon-link"></span></a>Excel for Web API</h1>
+
+<p><strong>Currently in beta.</strong></p>
+
+<p>A smart, customisable Excel <code>MediaTypeFormatter</code> for ASP.NET Web API.</p>
+
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>Control over column names, order, number format and visibility of properties in generated Excel documents via custom attribute.</li>
+<li>Lots of formatting options:
+
+<ul>
+<li>freeze header rows;</li>
+<li>add auto-filter;</li>
+<li>customize header row and cell styles/heights; and</li>
+<li>autofit column widths to data.</li>
+</ul>
+</li>
+<li>Decent (and improving) unit test coverage.</li>
+</ul><h2>
+<a name="limitations" class="anchor" href="#limitations"><span class="octicon octicon-link"></span></a>Limitations</h2>
+
+<p><code>ExcelMediaTypeFormatter</code> can only serialise collections that implement <code>IEnumerable&lt;&gt;</code> and does not work with nested/complex item types. Extending the range of types this formatter can work with is a priority for future work.</p>
+
+<h2>
+<a name="setting-it-up" class="anchor" href="#setting-it-up"><span class="octicon octicon-link"></span></a>Setting it up</h2>
+
+<p>First, you will need to add a reference to <strong>EPPlus</strong> to your project—either <a href="http://epplus.codeplex.com/">download it from CodePlex</a> or <a href="http://www.nuget.org/packages/EPPlus/">grab the package on NuGet</a>.</p>
+
+<p>Next, add the <code>ExcelMediaTypeFormatter</code> to the formatter collection in your Web API configuration. This will look something like:</p>
+
+<div class="highlight highlight-C#"><pre><span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">ExcelMediaTypeFormatter</span><span class="p">());</span> <span class="c1">// Where config = System.Web.Http.HttpConfiguration.</span>
+</pre></div>
+
+<p>You are now good to go forth and serialise; however, you may find the generated Excel output a tad boring. Enter the advanced formatter instantiation options!</p>
+
+<h3>
+<a name="advanced-setup-options" class="anchor" href="#advanced-setup-options"><span class="octicon octicon-link"></span></a>Advanced setup options</h3>
+
+<p>The <code>ExcelMediaTypeFormatter</code> provides a number of options for improving the appearance of generated Excel files.</p>
+
+<h4>
+<a name="autofit" class="anchor" href="#autofit"><span class="octicon octicon-link"></span></a><code>autoFit</code>
+</h4>
+
+<p><strong>Default <code>true</code>.</strong> Fit columns to the maximum width of the data they contain.</p>
+
+<h4>
+<a name="autofilter" class="anchor" href="#autofilter"><span class="octicon octicon-link"></span></a><code>autoFilter</code>
+</h4>
+
+<p><strong>Default <code>false</code>.</strong> Set the column headers up as an auto-filter on the data.</p>
+
+<h4>
+<a name="freezeheader" class="anchor" href="#freezeheader"><span class="octicon octicon-link"></span></a><code>freezeHeader</code>
+</h4>
+
+<p><strong>Default <code>false</code>.</strong> Split the top row of cells so that the column headers stay at the top of the window while scrolling through data.</p>
+
+<h4>
+<a name="headerheight" class="anchor" href="#headerheight"><span class="octicon octicon-link"></span></a><code>headerHeight</code>
+</h4>
+
+<p><strong>Default <code>0</code> (i.e. not set).</strong> Set the height of the column header row.</p>
+
+<h4>
+<a name="cellheight" class="anchor" href="#cellheight"><span class="octicon octicon-link"></span></a><code>cellHeight</code>
+</h4>
+
+<p><strong>Default <code>0</code> (i.e. not set).</strong> Set the height of the data cells.</p>
+
+<h4>
+<a name="cellstyle" class="anchor" href="#cellstyle"><span class="octicon octicon-link"></span></a><code>cellStyle</code>
+</h4>
+
+<p><strong>Default <code>null</code>.</strong> Can take an <code>Action&lt;OfficeOpenXml.Style.ExcelStyle&gt;</code> that specifies visual formatting options (such as fonts and borders) for all cells.</p>
+
+<h4>
+<a name="cellstyle-1" class="anchor" href="#cellstyle-1"><span class="octicon octicon-link"></span></a><code>cellStyle</code>
+</h4>
+
+<p><strong>Default <code>null</code>.</strong> Can take an <code>Action&lt;OfficeOpenXml.Style.ExcelStyle&gt;</code> that specifies visual formatting options (such as fonts and borders) for only the column header cells.</p>
+
+<h4>
+<a name="advanced-setup-example" class="anchor" href="#advanced-setup-example"><span class="octicon octicon-link"></span></a>Advanced setup example</h4>
+
+<div class="highlight highlight-C#"><pre><span class="kt">var</span> <span class="n">formatter</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExcelMediaTypeFormatter</span><span class="p">(</span><span class="n">autoFit</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+                                            <span class="n">autoFilter</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+                                            <span class="n">freezeHeader</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+                                            <span class="n">headerHeight</span><span class="p">:</span> <span class="m">20f</span><span class="p">,</span>
+                                            <span class="n">cellHeight</span><span class="p">:</span> <span class="m">18f</span><span class="p">,</span>
+                                            <span class="n">cellStyle</span><span class="p">:</span> <span class="p">(</span><span class="n">ExcelStyle</span> <span class="n">s</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">WrapText</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
+                                            <span class="n">headerStyle</span><span class="p">:</span> <span class="p">(</span><span class="n">ExcelStyle</span> <span class="n">s</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">s</span><span class="p">.</span><span class="n">Border</span><span class="p">.</span><span class="n">Bottom</span><span class="p">.</span><span class="n">Style</span> <span class="p">=</span> <span class="n">ExcelBorderStyle</span><span class="p">.</span><span class="n">Double</span>
+                                           <span class="p">);</span>
+
+<span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">formatter</span><span class="p">);</span>
+</pre></div>
+
+<h2>
+<a name="controlling-serialisation-output-with-excelattribute" class="anchor" href="#controlling-serialisation-output-with-excelattribute"><span class="octicon octicon-link"></span></a>Controlling serialisation output with <code>ExcelAttribute</code>
+</h2>
+
+<p>You can control how data gets serialised into columns using <code>ExcelAttribute</code> on individual properties.</p>
+
+<h3>
+<a name="set-column-header-names" class="anchor" href="#set-column-header-names"><span class="octicon octicon-link"></span></a>Set column header names</h3>
+
+<p>Header names can be provided using the <code>Header</code> parameter.</p>
+
+<div class="highlight highlight-C#"><pre><span class="na">[Excel(Header = "Column header")]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="set-number-format-for-data-cells" class="anchor" href="#set-number-format-for-data-cells"><span class="octicon octicon-link"></span></a>Set number format for data cells</h3>
+
+<p>The <code>NumberFormat</code> parameter allows you to provide a <a href="http://office.microsoft.com/en-001/excel-help/create-a-custom-number-format-HP010342372.aspx">custom Excel number format</a> to alter the number format used for data in a given column. For example, the following snippet will align numbers on the decimal point:</p>
+
+<div class="highlight highlight-C#"><pre><span class="na">[Excel(NumberFormat = "???.???")]</span>
+<span class="k">public</span> <span class="kt">decimal</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="ignore-a-column" class="anchor" href="#ignore-a-column"><span class="octicon octicon-link"></span></a>Ignore a column</h3>
+
+<p>To prevent a property from appearing as a column in the generated Excel file, set the <code>Ignore</code> parameter to true.</p>
+
+<div class="highlight highlight-C#"><pre><span class="na">[Excel(Ignore = true)]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="customise-display-order" class="anchor" href="#customise-display-order"><span class="octicon octicon-link"></span></a>Customise display order</h3>
+
+<p>By default, columns are ordered according to property order in the source, with properties in derived classes coming before those in base classes. However, sometimes you need more control over the order in which columns appear.</p>
+
+<p>The <code>Order</code> parameter works similarly to <a href="http://james.newtonking.com/json/help/index.html?topic=html/JsonPropertyOrder.htm">JSON.NET's <code>JsonPropertyAttribute.Order</code></a>. Properties are serialised from lowest to highest <code>Order</code> parameter value, and properties with the same <code>Order</code> value are in source order. By default, all properties are assumed to have an <code>Order</code> value of -1.</p>
+
+<p>Confusing? Here's an example showing all of these rules at work:</p>
+
+<div class="highlight highlight-C#"><pre><span class="c1">// This will be second, because it has an implicit Order of -1 and is the</span>
+<span class="c1">// first item with that Order value.</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value1</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// This will be last, because it has the highest Order value.</span>
+<span class="na">[Excel(Order = 2)]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value2</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// This will be second-to-last, because it has the second-highest Order value.</span>
+<span class="na">[Excel(Order = 1)]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value3</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// This will be first, because it has the lowest Order value.</span>
+<span class="na">[Excel(Order = -2)]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value4</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// This will be third, because it has an implicit Order of -1 and is the</span>
+<span class="c1">// second item with that Order value.</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value5</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="future-work" class="anchor" href="#future-work"><span class="octicon octicon-link"></span></a>Future work</h2>
+
+<ul>
+<li>Allow the generated Excel file name to be set as an attribute on objects.</li>
+<li>Extend the range of types that can be serialized to include non-enumerables and nested item types.</li>
+<li>Allow reading from Excel documents.</li>
+<li>Provide finer control over serialisation of individual properties (e.g. to serialise booleans as "yes" or "no").</li>
+</ul><p>Have an idea that you don't see here? Can't figure out how to do something? Would like to use this, but it doesn't cover your needs? Go ahead and open an issue!</p>
+
+
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jordangray">jordangray</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
