@@ -1,0 +1,139 @@
+$excel-green: #007233;
+$segoe: "Segoe UI", "Helvetica Neue", Helvetica, sans-serif;
+$segoe-light: "Segoe UI Light", "Segoe UI", "Helvetica Neue", Helvetica, sans-serif;
+
+body {
+  font: 17px/1.5 $segoe;
+  margin: 0;
+}
+
+h1 {
+  font-family: $segoe-light;
+  font-weight: normal;
+}
+
+h2 {
+  font-family: $segoe-light;
+  font-size: 34px;
+  font-weight: normal;
+}
+
+h3 {
+  font-family: $segoe-light;
+  font-size: 25px;
+  font-weight: normal;
+}
+
+h4 {
+  color: $excel-green;
+  font-family: $segoe;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+a {
+  border-bottom: 1px solid $excel-green;
+  color: $excel-green;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+code,
+kbd,
+samp {
+  font-family: Consolas, Courier New, Courier, sans-serif;
+
+  main & {
+    background: #f3f3f3;
+    color: $excel-green;
+    border: 1px solid #ddd;
+    padding: 0 4px;
+  }
+}
+
+pre {
+  background: #f3f3f3;
+  border: 1px solid #ddd;
+  font-family: Consolas, Courier New, Courier, sans-serif;
+  margin: 30px;
+  overflow-x: auto;
+  padding: 10px 20px;
+}
+
+ul,
+ol {
+  margin: 0 30px;
+  padding: 0;
+}
+
+li {
+  margin: 0.2em 0;
+}
+
+%page-size {
+    max-width: 1000px;
+    margin: 0 auto;
+    min-width: 400px;
+    width: 80%;
+  }
+
+header {
+  background: $excel-green;
+  color: white;
+  font-size: 2em;
+  font-family: $segoe-light;
+  padding: 60px 30px;
+  
+  h1,
+  p {
+    @extend %page-size;
+  }
+
+  small {
+    font-family: $segoe;
+    font-size: 34px;
+    font-weight: bold;
+  }
+
+  ul {
+    @extend %page-size;
+    font-size: 21px;
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    display: inline-block;
+    padding: 10px 30px 0 0;
+
+    a {
+      border: 1px solid white;
+      border-radius: 5px;
+      color: white;
+      display: block;
+      font-weight: normal;
+      padding: 5px 10px;
+
+      &:hover {
+        background: white;
+        color: $excel-green;
+      }
+    }
+
+    strong {
+      display: block;
+    }
+  }
+}
+
+main {
+  @extend %page-size;
+  padding: 30px;
+}
+
+.intro {
+  color: $excel-green;
+  font-family: $segoe-light;
+  font-size: 42px;
+  margin: 30px;
+}
