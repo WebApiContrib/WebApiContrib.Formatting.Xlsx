@@ -1,9 +1,9 @@
-﻿using ExcelWebApi.Tests.TestData;
+﻿using XlsxForWebApi.Tests.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace ExcelWebApi.Tests
+namespace XlsxForWebApi.Tests
 {
     [TestClass]
     public class FormatterUtilsTests

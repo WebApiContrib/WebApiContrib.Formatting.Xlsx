@@ -7,8 +7,8 @@
     <ProjectGuid>{B6A319B2-82A4-41BA-A895-4FC02A0D53EF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExcelWebApi</RootNamespace>
-    <AssemblyName>ExcelWebApi</AssemblyName>
+    <RootNamespace>XlsxForWebApi</RootNamespace>
+    <AssemblyName>XlsxForWebApi</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -49,7 +49,7 @@
     <Compile Include="ExcelAttribute.cs" />
     <Compile Include="ExcelFieldInfo.cs" />
     <Compile Include="ExcelFieldInfoCollection.cs" />
-    <Compile Include="ExcelMediaTypeFormatter.cs" />
+    <Compile Include="XlsxMediaTypeFormatter.cs" />
     <Compile Include="FormatterUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

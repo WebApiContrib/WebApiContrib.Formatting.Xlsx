@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Excel for Web API")]
+[assembly: AssemblyTitle("XLSX for Web API")]
 [assembly: AssemblyDescription("MS Excel extensions and utilities for Web API projects")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jordan Gray")]
-[assembly: AssemblyProduct("Excel for Web API")]
+[assembly: AssemblyProduct("XLSX for Web API")]
 [assembly: AssemblyCopyright("No rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

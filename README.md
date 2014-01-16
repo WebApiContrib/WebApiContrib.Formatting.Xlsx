@@ -1,5 +1,5 @@
-Excel for Web API
-=================
+XLSX for Web API
+================
 
 **Currently in beta.**
 
@@ -21,7 +21,7 @@ Features
 Limitations
 -----------
 
-`ExcelMediaTypeFormatter` can only serialise collections that implement `IEnumerable<>` and does not work with nested/complex item types. Extending the range of types this formatter can work with is a priority for future work.
+`XlsxMediaTypeFormatter` can only serialise collections that implement `IEnumerable<>` and does not work with nested/complex item types. Extending the range of types this formatter can work with is a priority for future work.
 
 
 Setting it up
@@ -29,10 +29,10 @@ Setting it up
 
 First, you will need to add a reference to **EPPlus** to your project—either [download it from CodePlex][epplus-codeplex] or [grab the package on NuGet][epplus-nuget].
 
-Next, add the `ExcelMediaTypeFormatter` to the formatter collection in your Web API configuration. This will look something like:
+Next, add the `XlsxMediaTypeFormatter` to the formatter collection in your Web API configuration. This will look something like:
 
 ```C#
-config.Formatters.Add(new ExcelMediaTypeFormatter()); // Where config = System.Web.Http.HttpConfiguration.
+config.Formatters.Add(new XlsxMediaTypeFormatter()); // Where config = System.Web.Http.HttpConfiguration.
 ```
 
 You are now good to go forth and serialise; however, you may find the generated Excel output a tad boring. Enter the advanced formatter instantiation options!
@@ -40,7 +40,7 @@ You are now good to go forth and serialise; however, you may find the generated 
 
 ### Advanced setup options
 
-The `ExcelMediaTypeFormatter` provides a number of options for improving the appearance of generated Excel files.
+The `XlsxMediaTypeFormatter` provides a number of options for improving the appearance of generated Excel files.
 
 
 #### `autoFit`
@@ -73,14 +73,14 @@ The `ExcelMediaTypeFormatter` provides a number of options for improving the app
 #### Advanced setup example
 
 ```C#
-var formatter = new ExcelMediaTypeFormatter(autoFit: true,
-                                            autoFilter: true,
-                                            freezeHeader: true,
-                                            headerHeight: 20f,
-                                            cellHeight: 18f,
-                                            cellStyle: (ExcelStyle s) => s.WrapText = true,
-                                            headerStyle: (ExcelStyle s) => s.Border.Bottom.Style = ExcelBorderStyle.Double
-                                           );
+var formatter = new XlsxMediaTypeFormatter(autoFit: true,
+                                           autoFilter: true,
+                                           freezeHeader: true,
+                                           headerHeight: 20f,
+                                           cellHeight: 18f,
+                                           cellStyle: (ExcelStyle s) => s.WrapText = true,
+                                           headerStyle: (ExcelStyle s) => s.Border.Bottom.Style = ExcelBorderStyle.Double
+                                          );
 
 config.Formatters.Add(formatter);
 ```

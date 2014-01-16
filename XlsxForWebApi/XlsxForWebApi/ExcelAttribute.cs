@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExcelWebApi
+namespace XlsxForWebApi
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class ExcelAttribute : Attribute

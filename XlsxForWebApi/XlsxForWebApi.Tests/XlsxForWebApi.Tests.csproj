@@ -6,8 +6,8 @@
     <ProjectGuid>{91831A5B-8286-466A-8CC5-07A630493D9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExcelWebApi.Tests</RootNamespace>
-    <AssemblyName>ExcelWebApi.Tests</AssemblyName>
+    <RootNamespace>XlsxForWebApi.Tests</RootNamespace>
+    <AssemblyName>XlsxForWebApi.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -57,16 +57,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ExcelMediaTypeFormatterTests.cs" />
+    <Compile Include="XlsxMediaTypeFormatterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\ComplexTestItem.cs" />
     <Compile Include="TestData\SimpleTestItem.cs" />
     <Compile Include="FormatterUtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExcelWebApi\ExcelWebApi.csproj">
+    <ProjectReference Include="..\XlsxForWebApi\XlsxForWebApi.csproj">
       <Project>{b6a319b2-82a4-41ba-a895-4fc02a0d53ef}</Project>
-      <Name>ExcelWebApi</Name>
+      <Name>XlsxForWebApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

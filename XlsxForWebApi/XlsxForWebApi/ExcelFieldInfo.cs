@@ -1,4 +1,4 @@
-﻿namespace ExcelWebApi
+﻿namespace XlsxForWebApi
 {
     public class ExcelFieldInfo
     {

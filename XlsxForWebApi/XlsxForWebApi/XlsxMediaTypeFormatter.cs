@@ -11,13 +11,13 @@ using System.Security.Permissions;
 using System.Threading.Tasks;
 using System.Web.ModelBinding;
 
-namespace ExcelWebApi
+namespace XlsxForWebApi
 {
 
     /// <summary>
     /// Class used to send an Excel file to the response.
     /// </summary>
-    public class ExcelMediaTypeFormatter : MediaTypeFormatter
+    public class XlsxMediaTypeFormatter : MediaTypeFormatter
     {
 
         #region Properties
@@ -71,7 +71,7 @@ namespace ExcelWebApi
         /// <param name="cellHeight">Height of each row of data.</param>
         /// <param name="cellStyle">An action method that modifies the worksheet cell style.</param>
         /// <param name="headerStyle">An action method that modifies the cell style of the first (header) row in the worksheet.</param>
-        public ExcelMediaTypeFormatter(bool autoFit = true, bool autoFilter = false, bool freezeHeader = false, float headerHeight = 0, float cellHeight = 0, Action<ExcelStyle> cellStyle = null, Action<ExcelStyle> headerStyle = null)
+        public XlsxMediaTypeFormatter(bool autoFit = true, bool autoFilter = false, bool freezeHeader = false, float headerHeight = 0, float cellHeight = 0, Action<ExcelStyle> cellStyle = null, Action<ExcelStyle> headerStyle = null)
         {
             SupportedMediaTypes.Clear();
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));

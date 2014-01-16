@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<title>xlsx for Web API (beta)</title>
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/code.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<!--[if lt IE 10]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+<header>
+	<h1><span class="xlsx">XLSX</span> for Web API <small>(beta)</small></h1>
+	<p>An Excel <code>Media&shy;Type&shy;Formatter</code> for ASP.NET Web API.</p>
+	<ul>
+		<li><a class="zip" href="zipball/master">Download <strong>ZIP File</strong></a>
+		<li><a class="github" href="https://github.com/jordangray/Excel-for-Web-API">View on <strong>GitHub</strong></a>
+	</ul>
+</header>
+
+<main>
+	<p class="intro"><strong><span class="xlsx">XLSX</span> for Web API</strong> provides a smart, customisable Excel <code>Media&shy;Type&shy;Formatter</code> for ASP.NET Web API.</h1>
+
+	<h2>Features</h2>
+
+	<ul>
+		<li>Control over column names, order, number format and visibility of properties in generated Excel documents via custom attribute.
+		<li>Lots of formatting options:
+			<ul>
+				<li>freeze header rows;
+				<li>add auto-filter;
+				<li>customize header row and cell styles/heights; and
+				<li>autofit column widths to data.
+			</ul>
+		<li>Decent (and improving) unit test coverage.
+	</ul>
+
+	<h2>Limitations</h2>
+
+	<p><code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> can only serialise collections that implement <code>IEnumerable&lt;&gt;</code> and does not work with nested/complex item types. Extending the range of types this formatter can work with is a priority for future work.</p>
+
+	<h2>Setting it up</h2>
+
+	<ol>
+		<li>Add a reference to <kbd>EPPlus.dll</kbd> to your project—you can either <a href="http://epplus.codeplex.com/">download it from CodePlex</a> or <a href="http://www.nuget.org/packages/EPPlus/">grab the package on NuGet</a>.
+		<li>Add the <code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> to the formatter collection in your Web API configuration. This will look something like:
+			<pre class="highlight csharp"><span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">XlsxMediaTypeFormatter</span><span class="p">());</span> <span class="c1">// Where config = System.Web.Http.HttpConfiguration.</span></pre>
+		
+	</ol>
+
+	<p>You are now good to go forth and serialise; however, you may find the generated Excel output a tad boring. Enter the advanced formatter instantiation options!</p>
+
+	<h3>Advanced setup options</h3>
+
+	<p>The <code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> provides a number of options for improving the appearance of generated Excel files.</p>
+
+	<dl>
+		<dt><code>autoFit</code>
+		<dd><strong>Default <code>true</code>.</strong>
+		<dd>Fit columns to the maximum width of the data they contain.
+
+		<dt><code>autoFilter</code>
+		<dd><strong>Default <code>false</code>.</strong>
+		<dd>Set the column headers up as an auto-filter on the data.
+
+		<dt><code>freezeHeader</code>
+		<dd><strong>Default <code>false</code>.</strong>
+		<dd>Split the top row of cells so that the column headers stay at the top of the window while scrolling through data.
+
+		<dt><code>headerHeight</code>
+		<dd><strong>Default <code>0</code> (not set).</strong>
+		<dd>Set the height of the column header row.
+
+		<dt><code>cellHeight</code>
+		<dd><strong>Default <code>0</code> (not set).</strong>
+		<dd>Set the height of the data cells.
+
+		<dt><code>cellStyle</code>
+		<dd><strong>Default <code>null</code>.</strong>
+		<dd>Can take an <code>Action&#8203;&lt;Office&shy;Open&shy;Xml&#8203;.Style&#8203;.Excel&shy;Style&gt;</code> that specifies visual formatting options (such as fonts and borders) for all cells.
+
+		<dt><code>cellStyle</code>
+		<dd><strong>Default <code>null</code>.</strong>
+		<dd>Can take an <code>Action&#8203;&lt;Office&shy;Open&shy;Xml&#8203;.Style&#8203;.Excel&shy;Style&gt;</code> that specifies visual formatting options (such as fonts and borders) for only the column header cells.
+	</dl>
+
+	<h4>Advanced setup example</h4>
+
+	<pre class="highlight csharp"><span class="kt">var</span> <span class="n">formatter</span> <span class="p">=</span> <span class="k">new</span> <span class="n">XlsxMediaTypeFormatter</span><span class="p">(
+	</span><span class="n">autoFit</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+	<span class="n">autoFilter</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+	<span class="n">freezeHeader</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
+	<span class="n">headerHeight</span><span class="p">:</span> <span class="m">20f</span><span class="p">,</span>
+	<span class="n">cellHeight</span><span class="p">:</span> <span class="m">18f</span><span class="p">,</span>
+	<span class="n">cellStyle</span><span class="p">:</span> <span class="p">(</span><span class="n">ExcelStyle</span> <span class="n">s</span><span class="p">)</span> <span class="p">=&gt;</span>
+		<span class="n">s</span><span class="p">.</span><span class="n">WrapText</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
+	<span class="n">headerStyle</span><span class="p">:</span> <span class="p">(</span><span class="n">ExcelStyle</span> <span class="n">s</span><span class="p">)</span> <span class="p">=&gt;</span>
+		<span class="n">s</span><span class="p">.</span><span class="n">Border</span><span class="p">.</span><span class="n">Bottom</span><span class="p">.</span><span class="n">Style</span> <span class="p">=</span> <span class="n">ExcelBorderStyle</span><span class="p">.</span><span class="n">Double</span>
+<span class="p">);</span>
+
+<span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">formatter</span><span class="p">);</span></pre>
+  
+	<h2>Controlling serialisation output with <code>ExcelAttribute</code></h2>
+
+	<p>You can control how data gets serialised into columns using <code>Excel&shy;Attribute</code> on individual properties.</p>
+
+	<h3>Set column header names</h3>
+
+	<p>Header names can be provided using the <code>Header</code> parameter.</p>
+
+	<pre class="highlight csharp"><span class="na">[Excel(Header = "Column header")]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></pre>
+  
+	<h3>Set number format for data cells</h3>
+
+	<p>The <code>Number&shy;Format</code> parameter allows you to provide a <a href="http://office.microsoft.com/en-001/excel-help/create-a-custom-number-format-HP010342372.aspx">custom Excel number format</a> to alter the number format used for data in a given column. For example, the following snippet will align numbers on the decimal point:</p>
+
+	<pre class="highlight csharp"><span class="na">[Excel(NumberFormat = "???.???")]</span>
+<span class="k">public</span> <span class="kt">decimal</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></pre>
+  
+	<h3>Ignore a column</h3>
+
+	<p>To prevent a property from appearing as a column in the generated Excel file, set the <code>Ignore</code> parameter to true.</p>
+
+	<pre class="highlight csharp"><span class="na">[Excel(Ignore = true)]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></pre>
+  
+	<h3>Customise display order</h3>
+
+	<p>By default, columns are ordered according to property order in the source, with properties in derived classes coming before those in base classes. However, sometimes you need more control over the order in which columns appear.</p>
+
+	<p>The <code>Order</code> parameter works similarly to <a href="http://james.newtonking.com/json/help/index.html?topic=html/JsonPropertyOrder.htm">JSON.NET's <code>Json&shy;Property&shy;Attribute&#8203;.Order</code></a>. Properties are serialised from lowest to highest <code>Order</code> parameter value, and properties with the same <code>Order</code> value are in source order. By default, all properties are assumed to have an <code>Order</code> value of -1.</p>
+
+	<p>Confusing? Here's an example showing all of these rules at work:</p>
+
+	<pre class="highlight csharp"><span class="c1">// Second, because it has an implicit Order of -1 and is the</span>
+<span class="c1">// first item with that Order value.</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value1</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// Last, because it has the highest Order value.</span>
+<span class="na">[Excel(Order = 2)]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value2</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// Second-to-last, because it has the second-highest Order value.</span>
+<span class="na">[Excel(Order = 1)]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value3</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// First, because it has the lowest Order value.</span>
+<span class="na">[Excel(Order = -2)]</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value4</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// Third, because it has an implicit Order of -1 and is the</span>
+<span class="c1">// second item with that Order value.</span>
+<span class="k">public</span> <span class="kt">string</span> <span class="n">Value5</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></pre>
+  
+	<h2 id="future-work">Future work</h2>
+
+	<ul>
+		<li>Allow the generated Excel file name to be set as an attribute on objects.
+		<li>Extend the range of types that can be serialized to include non-enumerables and nested item types.
+		<li>Allow reading from Excel documents.
+		<li>Provide finer control over serialisation of individual properties (e.g. to serialise booleans as "yes" or "no").
+	</ul>
+	
+	<p>Have an idea that you don't see here? Can't figure out how to do something? Would like to use this, but it doesn't cover your needs? Go ahead and open an issue!</p>
+</main>
+
+<footer>
+	<h2>Credits and disclaimers</h2>
+	<p><strong><span class="xlsx">.xlsx</span> for Web API</strong> is maintained by <a href="http://github.com/jordangray">Jordan Gray</a> (<a href="https://twitter.com/jordangray">@jordangray</a>). The ZIP and GitHub icons are from the <a href="http://modernuiicons.com/">Modern UI Icons</a> collection by <a href="http://templarian.com/">Austin Andrew</a> (<a href="https://twitter.com/Templarian">@templarian</a>).</p>
+	<p>Microsoft and Excel are either registered trademarks or trademarks of Microsoft Corporation in the United States and/or other countries.</p>
+	<p>This project is not endorsed by Microsoft Corporation.</p>
+</footer>

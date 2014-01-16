@@ -1,4 +1,4 @@
-﻿using ExcelWebApi.Tests.TestData;
+﻿using XlsxForWebApi.Tests.TestData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -14,10 +14,10 @@ using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace ExcelWebApi.Tests
+namespace XlsxForWebApi.Tests
 {
     [TestClass]
-    public class ExcelMediaTypeFormatterTests
+    public class XlsxMediaTypeFormatterTests
     {
         const string XlsMimeType = "application/vnd.ms-excel";
         const string XlsxMimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -25,7 +25,7 @@ namespace ExcelWebApi.Tests
         [TestMethod]
         public void SupportedMediaTypes_SupportsExcelMediaTypes()
         {
-            var formatter = new ExcelMediaTypeFormatter();
+            var formatter = new XlsxMediaTypeFormatter();
 
             Assert.IsTrue(formatter.SupportedMediaTypes.Any(s => s.MediaType == XlsMimeType),
                           "XLS media type not supported.");
@@ -37,7 +37,7 @@ namespace ExcelWebApi.Tests
         [TestMethod]
         public void CanWriteType_TypeEnumerable_CanWriteType()
         {
-            var formatter = new ExcelMediaTypeFormatter();
+            var formatter = new XlsxMediaTypeFormatter();
 
             Assert.IsTrue(formatter.CanWriteType(typeof(IEnumerable<object>)),
                           "Cannot write enumerable types.");
@@ -46,7 +46,7 @@ namespace ExcelWebApi.Tests
         [TestMethod]
         public void CanWriteType_TypeObject_CannotWriteType()
         {
-            var formatter = new ExcelMediaTypeFormatter();
+            var formatter = new XlsxMediaTypeFormatter();
 
             Assert.IsFalse(formatter.CanWriteType(typeof(object)),
                            "Can write any type.");
@@ -55,7 +55,7 @@ namespace ExcelWebApi.Tests
         [TestMethod]
         public void WriteToStreamAsync_WithGenericCollection_WritesExcelDocumentToStream()
         {
-            var formatter = new ExcelMediaTypeFormatter();
+            var formatter = new XlsxMediaTypeFormatter();
 
             var data = new List<SimpleTestItem> { new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" },
                                             new SimpleTestItem { Value1 = "3,1", Value2 = "3,2" }  };
@@ -95,17 +95,9 @@ namespace ExcelWebApi.Tests
         #endregion
 
         #region Utilities
-        public ExcelWorksheet GetWorksheetFromStream<TItem>(ExcelMediaTypeFormatter formatter, IEnumerable<TItem> data)
+        public ExcelWorksheet GetWorksheetFromStream<TItem>(XlsxMediaTypeFormatter formatter, IEnumerable<TItem> data)
         {
             var ms = new MemoryStream();
-
-            formatter = new ExcelMediaTypeFormatter(autoFit: true,
-                                                    autoFilter: true,
-                                                    freezeHeader: true,
-                                                    headerHeight: 20.0f,
-                                                    cellHeight: 18f,
-                                                    cellStyle: (ExcelStyle s) => s.WrapText = true,
-                                                    headerStyle: (ExcelStyle s) => s.Border.Bottom.Style = ExcelBorderStyle.Double);
 
             var content = new FakeContent();
             content.Headers.ContentType = new MediaTypeHeaderValue("application/atom+xml");

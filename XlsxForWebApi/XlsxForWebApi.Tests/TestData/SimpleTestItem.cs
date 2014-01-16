@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace ExcelWebApi.Tests.TestData
+namespace XlsxForWebApi.Tests.TestData
 {
     public class SimpleTestItem
     {
