@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
-using ExcelWebApi;
+using XlsxForWebApi;
 
-namespace ExcelWebApi.Tests.TestData
+namespace XlsxForWebApi.Tests.TestData
 {
     public class ComplexTestItem
     {

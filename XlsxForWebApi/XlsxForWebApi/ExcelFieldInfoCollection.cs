@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace ExcelWebApi
+namespace XlsxForWebApi
 {
     public class ExcelFieldInfoCollection : KeyedCollection<string, ExcelFieldInfo>
     {

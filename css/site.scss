@@ -1,27 +1,37 @@
 $excel-green: #007233;
-$segoe: "Segoe UI", "Helvetica Neue", Helvetica, sans-serif;
-$segoe-light: "Segoe UI Light", "Segoe UI", "Helvetica Neue", Helvetica, sans-serif;
+$segoe: "Segoe UI", "Helvetica Neue", "Open Sans", Helvetica, sans-serif;
+$segoe-light: "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Open Sans", Helvetica, sans-serif;
+
+%page-size {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 400px;
+  width: 80%;
+}
 
 body {
   font: 17px/1.5 $segoe;
   margin: 0;
 }
 
-h1 {
+h1,
+h2,
+h3 {
   font-family: $segoe-light;
-  font-weight: normal;
+  font-weight: 100;
+}
+
+h1 {
+  font-size: 68px;
 }
 
 h2 {
-  font-family: $segoe-light;
   font-size: 34px;
-  font-weight: normal;
 }
 
 h3 {
-  font-family: $segoe-light;
   font-size: 25px;
-  font-weight: normal;
 }
 
 h4 {
@@ -70,23 +80,38 @@ li {
   margin: 0.2em 0;
 }
 
-%page-size {
-    max-width: 1000px;
-    margin: 0 auto;
-    min-width: 400px;
-    width: 80%;
+dl {
+  margin: 30px;
+}
+
+dt {
+  font-size: 20px;
+  font-weight: 100;
+  margin: .8em 0 .2em;
+}
+
+.xlsx {
+  text-transform: lowercase;
+
+  &:before {
+    content: '.';
+    color: #aaa;
   }
+}
 
 header {
   background: $excel-green;
   color: white;
-  font-size: 2em;
   font-family: $segoe-light;
+  font-size: 34px;
+  font-weight: 100;
   padding: 60px 30px;
   
   h1,
   p {
     @extend %page-size;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   small {
@@ -99,24 +124,44 @@ header {
     @extend %page-size;
     font-size: 21px;
     list-style: none;
+    margin-top: 0;
+    margin-bottom: 0;
     padding: 0;
   }
 
   li {
     display: inline-block;
-    padding: 10px 30px 0 0;
+    padding: 10px 20px 0 0;
 
     a {
+      background: url(bg/header-icons.png) no-repeat 0 50%;
       border: 1px solid white;
       border-radius: 5px;
       color: white;
       display: block;
       font-weight: normal;
-      padding: 5px 10px;
+      padding: 5px 10px 5px 65px;
 
       &:hover {
-        background: white;
+        background-color: white;
         color: $excel-green;
+      }
+
+      &.zip {
+        background-position: 10px 50%;
+
+        &:hover {
+          background-position: -150px 50%;
+        }
+      }
+
+      &.github {
+        background-position: -310px 50%;
+        padding-left: 43px;
+
+        &:hover {
+          background-position: -470px 50%;
+        }
       }
     }
 
@@ -135,5 +180,22 @@ main {
   color: $excel-green;
   font-family: $segoe-light;
   font-size: 42px;
+  font-weight: 100;
   margin: 30px;
+}
+
+footer {
+  background: $excel-green;
+  color: white;
+  padding: 30px;
+
+  p,
+  h2 {
+    @extend %page-size;
+  }
+
+  a {
+    border-color: white;
+    color: white;
+  }
 }
