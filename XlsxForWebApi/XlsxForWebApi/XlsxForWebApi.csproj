@@ -56,6 +56,17 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\EPPlus.dll" />
+    <Content Include="bin\Debug\EPPlus.xml" />
+    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
+    <Content Include="bin\Debug\System.Net.Http.Formatting.dll" />
+    <Content Include="bin\Debug\System.Net.Http.Formatting.xml" />
+    <Content Include="bin\Debug\XlsxForWebApi.dll" />
+    <Content Include="bin\Debug\XlsxForWebApi.pdb" />
+    <Content Include="bin\Release\XlsxForWebApi.dll" />
+    <Content Include="bin\Release\XlsxForWebApi.pdb" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
