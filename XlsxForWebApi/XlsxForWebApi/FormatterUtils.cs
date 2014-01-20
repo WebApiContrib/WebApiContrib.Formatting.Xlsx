@@ -25,13 +25,27 @@ namespace XlsxForWebApi
         }
 
         /// <summary>
+        /// Get the `Attribute` object of the specified type associated with a class. 
+        /// </summary>
+        /// <typeparam name="TAttribute">Type of attribute to get.</typeparam>
+        /// <param name="memberInfo">The class to look for the attribute on.</param>
+        public static TAttribute GetAttribute<TAttribute>(Type type)
+        {
+            var attributes = from a in type.GetCustomAttributes(true)
+                             where a is TAttribute
+                             select a;
+
+            return (TAttribute)attributes.FirstOrDefault();
+        }
+
+        /// <summary>
         /// Get the value of the `ExcelAttribute.Order` attribute associated with a given
         /// member. If not found, will default to the `DataMember.Order` value.
         /// </summary>
         /// <param name="member">The member for which to find the `ExcelAttribute.Order` value.</param>
         public static Int32 MemberOrder(MemberInfo member)
         {
-            var excelProperty = GetAttribute<ExcelAttribute>(member);
+            var excelProperty = GetAttribute<ExcelColumnAttribute>(member);
             if (excelProperty != null && excelProperty._order.HasValue)
                 return excelProperty.Order;
 
@@ -49,7 +63,7 @@ namespace XlsxForWebApi
         /// <param name="member">The member for which to find the `ExcelAttribute.Ignore` value.</param>
         public static bool IsMemberIgnored(MemberInfo member)
         {
-            var excelProperty = GetAttribute<ExcelAttribute>(member);
+            var excelProperty = GetAttribute<ExcelColumnAttribute>(member);
             if (excelProperty != null)
                 return excelProperty.Ignore;
 
@@ -94,13 +108,18 @@ namespace XlsxForWebApi
         }
 
         /// <summary>
-        /// Get the item type of an object that implements `IEnumerable`.
+        /// Get the item type of a type that implements `IEnumerable`.
         /// </summary>
-        /// <param name="value">An instance whose underlying type to check.</param>
+        /// <param name="value">A type that purportedly implements `IEnumerable`.</param>
         /// <returns></returns>
-        public static Type GetEnumerableItemType(object value)
+        public static Type GetEnumerableItemType(Type type)
         {
-            Type[] interfaces = value.GetType().GetInterfaces();
+            // If the type passed IS the interface type, success!
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                return type.GetGenericArguments()[0];
+
+            // Otherwise, loop through the interfaces until we find IEnumerable (if it exists).
+            Type[] interfaces = type.GetInterfaces();
             foreach (Type i in interfaces)
             {
                 if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>))

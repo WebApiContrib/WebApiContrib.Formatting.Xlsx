@@ -46,7 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcelAttribute.cs" />
+    <Compile Include="ExcelColumnAttribute.cs" />
+    <Compile Include="ExcelDocumentAttribute.cs" />
     <Compile Include="ExcelFieldInfo.cs" />
     <Compile Include="ExcelFieldInfoCollection.cs" />
     <Compile Include="XlsxMediaTypeFormatter.cs" />

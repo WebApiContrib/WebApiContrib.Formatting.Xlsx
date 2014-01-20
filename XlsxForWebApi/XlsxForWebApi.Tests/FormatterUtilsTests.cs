@@ -9,13 +9,23 @@ namespace XlsxForWebApi.Tests
     public class FormatterUtilsTests
     {
         [TestMethod]
-        public void GetAttribute_ExcelAttributeOfComplexTestItem_ExcelAttribute()
+        public void GetAttribute_ExcelColumnAttributeOfComplexTestItemValue2_ExcelColumnAttribute()
         {
             var value2 = typeof(ComplexTestItem).GetMember("Value2")[0];
-            var excelAttribute = FormatterUtils.GetAttribute<ExcelAttribute>(value2);
+            var excelAttribute = FormatterUtils.GetAttribute<ExcelColumnAttribute>(value2);
 
             Assert.IsNotNull(excelAttribute);
             Assert.AreEqual(2, excelAttribute.Order);
+        }
+
+        [TestMethod]
+        public void GetAttribute_ExcelDocumentAttributeOfComplexTestItem_ExcelDocumentAttribute()
+        {
+            var complexTestItem = typeof(ComplexTestItem);
+            var excelAttribute = FormatterUtils.GetAttribute<ExcelDocumentAttribute>(complexTestItem);
+
+            Assert.IsNotNull(excelAttribute);
+            Assert.AreEqual("Complex test item", excelAttribute.FileName);
         }
 
         [TestMethod]
@@ -85,7 +95,17 @@ namespace XlsxForWebApi.Tests
         [TestMethod]
         public void GetEnumerableItemType_ListOfSimpleTestItem_ReturnsTestItemType()
         {
-            var testItemList = new List<SimpleTestItem>();
+            var testItemList = typeof(List<SimpleTestItem>);
+            var itemType = FormatterUtils.GetEnumerableItemType(testItemList);
+
+            Assert.IsNotNull(itemType);
+            Assert.AreEqual(typeof(SimpleTestItem), itemType);
+        }
+
+        [TestMethod]
+        public void GetEnumerableItemType_IEnumerableOfSimpleTestItem_ReturnsTestItemType()
+        {
+            var testItemList = typeof(IEnumerable<SimpleTestItem>);
             var itemType = FormatterUtils.GetEnumerableItemType(testItemList);
 
             Assert.IsNotNull(itemType);

@@ -3,7 +3,7 @@
 namespace XlsxForWebApi
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class ExcelAttribute : Attribute
+    public class ExcelColumnAttribute : Attribute
     {
         // Nullable parameters not allowed on attributes. :(
         internal int? _order;
@@ -11,12 +11,12 @@ namespace XlsxForWebApi
         /// <summary>
         /// Control the output of this property when serialized to Excel.
         /// </summary>
-        public ExcelAttribute() { }
+        public ExcelColumnAttribute() { }
 
         /// <summary>
         /// Control the output of this property when serialized to Excel.
         /// </summary>
-        public ExcelAttribute(string header) {
+        public ExcelColumnAttribute(string header) {
             Header = header;
         }
 

@@ -92,24 +92,38 @@ namespace XlsxForWebApi
 
         public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
         {
-            // Get the raw URI and strip out query string.
+            // Get the raw request URI.
             string rawUri = System.Web.HttpContext.Current.Request.RawUrl;
 
+            // Remove query string if present.
             int queryStringIndex = rawUri.IndexOf('?');
             if (queryStringIndex > -1)
             {
                 rawUri = rawUri.Substring(0, queryStringIndex);
             }
 
-            // Get filename and add extension if none provided.
-            string fileName = System.Web.VirtualPathUtility.GetFileName(rawUri) ?? string.Empty;
+            string fileName;
 
-            var hasExcelExtension = fileName.EndsWith("xls", StringComparison.CurrentCultureIgnoreCase) ||
-                                    fileName.EndsWith("xlsx", StringComparison.CurrentCultureIgnoreCase);
+            // Look for ExcelDocumentAttribute on class.
+            var itemType = FormatterUtils.GetEnumerableItemType(type);
+            
+            var excelDocumentAttribute = FormatterUtils.GetAttribute<ExcelDocumentAttribute>(itemType ?? type);
 
-            if (!hasExcelExtension) fileName += ".xlsx";
+            if (excelDocumentAttribute != null && !string.IsNullOrEmpty(excelDocumentAttribute.FileName))
+            {
+                // If attribute exists with file name defined, use that.
+                fileName = excelDocumentAttribute.FileName;
+            }
+            else
+            {
+                // Otherwise, use either the URL file name component or just "data".
+                fileName = System.Web.VirtualPathUtility.GetFileName(rawUri) ?? "data";
+            }
 
-            // Set content disposition with a suggested filename.
+            // Add XLSX extension if not present.
+            if (!fileName.EndsWith("xlsx", StringComparison.CurrentCultureIgnoreCase)) fileName += ".xlsx";
+
+            // Set content disposition to use this file name.
             headers.ContentDisposition = new ContentDispositionHeaderValue("inline")
                                              { FileName = fileName };
 
@@ -139,10 +153,10 @@ namespace XlsxForWebApi
             var fieldInfo = new ExcelFieldInfoCollection();
 
             // Use all public, parameterless, readable properties of inner type.
-            var itemType = FormatterUtils.GetEnumerableItemType(value);
+            var itemType = FormatterUtils.GetEnumerableItemType(value.GetType());
             if (itemType == null) throw new ArgumentException("Only IEnumerable<T> values can be deserialised using the Excel formatter.");
 
-            var serializableMembers = FormatterUtils.GetMemberNames(itemType);
+            var serialisableMembers = FormatterUtils.GetMemberNames(itemType);
 
             var metadata = ModelMetadataProviders.Current.GetMetadataForType(null, itemType);
             
@@ -150,7 +164,8 @@ namespace XlsxForWebApi
                               where p.CanRead & p.GetGetMethod().IsPublic & p.GetGetMethod().GetParameters().Length == 0
                               select p).ToList();
 
-            foreach (var field in serializableMembers)
+            // Instantiate field names and fieldInfo lists with serialisable members.
+            foreach (var field in serialisableMembers)
             {
                 var propName = field;
                 var prop = properties.FirstOrDefault(p => p.Name == propName);
@@ -158,7 +173,7 @@ namespace XlsxForWebApi
                 if (prop == null) continue;
 
                 fields.Add(field);
-                fieldInfo.Add(new ExcelFieldInfo(field, FormatterUtils.GetAttribute<ExcelAttribute>(prop)));
+                fieldInfo.Add(new ExcelFieldInfo(field, FormatterUtils.GetAttribute<ExcelColumnAttribute>(prop)));
             }
 
             if (metadata != null && metadata.Properties != null)

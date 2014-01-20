@@ -86,10 +86,10 @@ config.Formatters.Add(formatter);
 ```
 
 
-Controlling serialisation output with `ExcelAttribute`
-------------------------------------------------------
+Controlling serialisation output with `ExcelColumnAttribute`
+------------------------------------------------------------
 
-You can control how data gets serialised into columns using `ExcelAttribute` on individual properties.
+You can control how data gets serialised into columns using `ExcelColumnAttribute` on individual properties.
 
 
 ### Set column header names
@@ -97,7 +97,7 @@ You can control how data gets serialised into columns using `ExcelAttribute` on 
 Header names can be provided using the `Header` parameter.
 
 ```C#
-[Excel(Header = "Column header")]
+[ExcelColumn(Header = "Column header")]
 public string Value { get; set; }
 ```
 
@@ -106,7 +106,7 @@ public string Value { get; set; }
 The `NumberFormat` parameter allows you to provide a [custom Excel number format][number-format] to alter the number format used for data in a given column. For example, the following snippet will align numbers on the decimal point:
 
 ```C#
-[Excel(NumberFormat = "???.???")]
+[ExcelColumn(NumberFormat = "???.???")]
 public decimal Value { get; set; }
 ```
 
@@ -116,7 +116,7 @@ public decimal Value { get; set; }
 To prevent a property from appearing as a column in the generated Excel file, set the `Ignore` parameter to true.
 
 ```C#
-[Excel(Ignore = true)]
+[ExcelColumn(Ignore = true)]
 public string Value { get; set; }
 ```
 
@@ -135,15 +135,15 @@ Confusing? Here's an example showing all of these rules at work:
 public string Value1 { get; set; }
 
 // This will be last, because it has the highest Order value.
-[Excel(Order = 2)]
+[ExcelColumn(Order = 2)]
 public string Value2 { get; set; }
 
 // This will be second-to-last, because it has the second-highest Order value.
-[Excel(Order = 1)]
+[ExcelColumn(Order = 1)]
 public string Value3 { get; set; }
 
 // This will be first, because it has the lowest Order value.
-[Excel(Order = -2)]
+[ExcelColumn(Order = -2)]
 public string Value4 { get; set; }
 
 // This will be third, because it has an implicit Order of -1 and is the
