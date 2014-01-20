@@ -1,6 +1,6 @@
 XLSX for Web API
 ================
 
-For more information and documentation, visit the [project website][project-website].
+**[Visit the project website][project-website] for more information and documentation.**
 
 [project-website]: jordangray.github.io/xlsx-for-web-api
