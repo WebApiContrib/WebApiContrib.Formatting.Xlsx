@@ -73,6 +73,13 @@ pre {
   overflow-x: auto;
   padding: 10px 20px;
 
+  code {
+    background: transparent;
+    color: inherit;
+    border: none;
+    padding: 0;
+  }
+
   @media (max-width: 800px) {
     margin: 30px 0;
 
@@ -208,6 +215,42 @@ main {
   @media (max-width: 800px) {
     margin: 15px 0;
     font-size: 25px;
+  }
+}
+
+#toc {
+  background: #f3f3f3;
+  border: 5px solid #ddd;
+  display: table;
+  padding: 5px 10px;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: .5em;
+
+    + ul {
+      margin-bottom: 1em;
+    }
+  }
+
+  &.closed {
+    h2 {
+      margin-bottom: 0;
+    }
+  }
+
+  .toggle-toc {
+    font-family: $segoe;
+    font-size: 25px;
+    font-weight: bold;
+
+    @media (max-width: 800px) {
+      font-size: 20px;
+    }
+
+    a {
+      border: none;
+    }
   }
 }
 

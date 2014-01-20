@@ -1,6 +1,6 @@
 XLSX for Web API
 ================
 
-See the [XLSX for Web API web page][xlsx-web-page] for more information.
+For more information and documentation, visit the [project page][xlsx-web-page].
 
 [xlsx-web-page]: http://jordangray.github.io/xlsx-for-web-api/
