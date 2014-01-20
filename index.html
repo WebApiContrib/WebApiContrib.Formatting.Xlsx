@@ -101,29 +101,29 @@
 
 <span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">formatter</span><span class="p">);</span></pre>
   
-	<h2>Controlling serialisation output with <code>ExcelAttribute</code></h2>
+	<h2>Controlling serialisation output with <code>Excel&shy;Column&shy;Attribute</code></h2>
 
-	<p>You can control how data gets serialised into columns using <code>Excel&shy;Attribute</code> on individual properties.</p>
+	<p>You can control how data gets serialised into columns using <code>Excel&shy;Column&shy;Attribute</code> on individual properties.</p>
 
 	<h3>Set column header names</h3>
 
 	<p>Header names can be provided using the <code>Header</code> parameter.</p>
 
-	<pre class="highlight csharp"><span class="na">[Excel(Header = "Column header")]</span>
+	<pre class="highlight csharp"><span class="na">[ExcelColumn(Header = "Column header")]</span>
 <span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></pre>
   
 	<h3>Set number format for data cells</h3>
 
 	<p>The <code>Number&shy;Format</code> parameter allows you to provide a <a href="http://office.microsoft.com/en-001/excel-help/create-a-custom-number-format-HP010342372.aspx">custom Excel number format</a> to alter the number format used for data in a given column. For example, the following snippet will align numbers on the decimal point:</p>
 
-	<pre class="highlight csharp"><span class="na">[Excel(NumberFormat = "???.???")]</span>
+	<pre class="highlight csharp"><span class="na">[ExcelColumn(NumberFormat = "???.???")]</span>
 <span class="k">public</span> <span class="kt">decimal</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></pre>
   
 	<h3>Ignore a column</h3>
 
 	<p>To prevent a property from appearing as a column in the generated Excel file, set the <code>Ignore</code> parameter to true.</p>
 
-	<pre class="highlight csharp"><span class="na">[Excel(Ignore = true)]</span>
+	<pre class="highlight csharp"><span class="na">[ExcelColumn(Ignore = true)]</span>
 <span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></pre>
   
 	<h3>Customise display order</h3>
@@ -139,15 +139,15 @@
 <span class="k">public</span> <span class="kt">string</span> <span class="n">Value1</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 
 <span class="c1">// Last, because it has the highest Order value.</span>
-<span class="na">[Excel(Order = 2)]</span>
+<span class="na">[ExcelColumn(Order = 2)]</span>
 <span class="k">public</span> <span class="kt">string</span> <span class="n">Value2</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 
 <span class="c1">// Second-to-last, because it has the second-highest Order value.</span>
-<span class="na">[Excel(Order = 1)]</span>
+<span class="na">[ExcelColumn(Order = 1)]</span>
 <span class="k">public</span> <span class="kt">string</span> <span class="n">Value3</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 
 <span class="c1">// First, because it has the lowest Order value.</span>
-<span class="na">[Excel(Order = -2)]</span>
+<span class="na">[ExcelColumn(Order = -2)]</span>
 <span class="k">public</span> <span class="kt">string</span> <span class="n">Value4</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 
 <span class="c1">// Third, because it has an implicit Order of -1 and is the</span>
