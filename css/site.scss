@@ -202,6 +202,7 @@ header {
 
 main {
   @extend %page-size;
+  display: block; // iOS Safari doesn't recognise <main>.
   padding: 30px;
 }
 
