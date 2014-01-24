@@ -8,6 +8,12 @@ $segoe-light: "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Open Sans", Helve
   margin-right: auto;
   min-width: 260px;
   width: 80%;
+
+  @media (max-width: 800px) {
+    width: auto;
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 body {
@@ -84,7 +90,7 @@ pre {
     margin: 30px 0;
 
     li & {
-      margin: 30px -30px;
+      margin: 30px -20px;
     }
   }
 }
@@ -93,6 +99,10 @@ ul,
 ol {
   margin: 0 30px;
   padding: 0;
+
+  @media (max-width: 800px) {
+    margin: 0 20px;
+  }
 }
 
 li {
@@ -132,7 +142,7 @@ header {
 
   @media (max-width: 800px) {
     font-size: 25px;
-    padding: 30px;
+    padding: 30px 20px;
   }
 
   
@@ -204,6 +214,10 @@ main {
   @extend %page-size;
   display: block; // iOS Safari doesn't recognise <main>.
   padding: 30px;
+
+  @media (max-width: 800px) {
+    padding: 0 20px;
+  }
 }
 
 .intro {
@@ -214,7 +228,7 @@ main {
   margin: 30px;
 
   @media (max-width: 800px) {
-    margin: 15px 0;
+    margin: 20px 0;
     font-size: 25px;
   }
 }
