@@ -5,7 +5,7 @@
 <title>xlsx for Web API (beta)</title>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600">
 <link rel="stylesheet" href="css/site.css">
-<link rel="stylesheet" href="css/code.css">
+<link rel="stylesheet" href="css/prism.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!--[if lt IE 10]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
@@ -67,7 +67,7 @@
 		<li>Add a reference to <kbd>EPPlus.dll</kbd> to your project—you can either <a href="http://epplus.codeplex.com/">download it from CodePlex</a> or <a href="http://www.nuget.org/packages/EPPlus/">grab the package on NuGet</a>.
 		<li>Add a reference to <kbd>Xlsx&shy;For&shy;Web&shy;Api&#8203;.dll</kbd> to your project.
 		<li>Add the <code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> to the formatter collection in your Web API configuration. This will look something like:
-			<pre class="highlight csharp"><code><span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">XlsxMediaTypeFormatter</span><span class="p">());</span> <span class="c1">// Where config = System.Web.Http.HttpConfiguration.</span></code></pre>
+			<pre><code class="language-csharp">config.Formatters.Add(new XlsxMediaTypeFormatter()); // Where config = System.Web.Http.HttpConfiguration.</code></pre>
 	</ol>
 
 	<p>You are now good to go forth and serialise; however, you may find the generated Excel output a tad boring. Enter the advanced formatter instantiation options!</p>
@@ -108,26 +108,26 @@
 
 	<h4 id="advanced-setup-example">Advanced setup example</h4>
 
-	<pre class="highlight csharp"><code><span class="kt">var</span> <span class="n">formatter</span> <span class="p">=</span> <span class="k">new</span> <span class="n">XlsxMediaTypeFormatter</span><span class="p">(
-	</span><span class="n">autoFit</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
-	<span class="n">autoFilter</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
-	<span class="n">freezeHeader</span><span class="p">:</span> <span class="k">true</span><span class="p">,</span>
-	<span class="n">headerHeight</span><span class="p">:</span> <span class="m">20f</span><span class="p">,</span>
-	<span class="n">cellHeight</span><span class="p">:</span> <span class="m">18f</span><span class="p">,</span>
-	<span class="n">cellStyle</span><span class="p">:</span> <span class="p">(</span><span class="n">ExcelStyle</span> <span class="n">s</span><span class="p">)</span> <span class="p">=&gt;</span>
-		<span class="n">s</span><span class="p">.</span><span class="n">WrapText</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span>
-	<span class="n">headerStyle</span><span class="p">:</span> <span class="p">(</span><span class="n">ExcelStyle</span> <span class="n">s</span><span class="p">)</span> <span class="p">=&gt;</span>
-		<span class="n">s</span><span class="p">.</span><span class="n">Border</span><span class="p">.</span><span class="n">Bottom</span><span class="p">.</span><span class="n">Style</span> <span class="p">=</span> <span class="n">ExcelBorderStyle</span><span class="p">.</span><span class="n">Double</span>
-<span class="p">);</span>
+	<pre><code class="language-csharp">var formatter = new XlsxMediaTypeFormatter(
+	autoFit: true,
+	autoFilter: true,
+	freezeHeader: true,
+	headerHeight: 20f,
+	cellHeight: 18f,
+	cellStyle: (ExcelStyle s) =>
+		s.WrapText = true,
+	headerStyle: (ExcelStyle s) =>
+		s.Border.Bottom.Style = ExcelBorderStyle.Double
+);
 
-<span class="n">config</span><span class="p">.</span><span class="n">Formatters</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">formatter</span><span class="p">);</span></code></pre>
+config.Formatters.Add(formatter);</code></pre>
   
 	<h2 id="set-generated-file">Set the generated file name with <code>Excel&shy;Document&shy;Attribute</code></h2>
   	
 	<p>With the <code>Excel&shy;Document&shy;Attribute</code>, you can set the file name used for an Excel document generated from a type.</p>
 
-	<pre class="highlight csharp"><code><span class="na">[ExcelDocument("Column header")]</span>
-<span class="k">public</span> <span class="kt">class</span> <span class="n">ItemType</span> <span class="p">{</span></code></pre>
+	<pre><code class="language-csharp">[ExcelDocument("Column header")]
+public class ItemType { // ...</code></pre>
 
 	<h2 id="controlling-serialisation-output">Controlling serialisation output with <code>Excel&shy;Column&shy;Attribute</code></h2>
 
@@ -137,22 +137,22 @@
 
 	<p>Header names can be provided using the <code>Header</code> parameter.</p>
 
-	<pre class="highlight csharp"><code><span class="na">[ExcelColumn(Header = "Column header")]</span>
-<span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></code></pre>
+	<pre><code class="language-csharp">[ExcelColumn(Header = "Column header")]
+public string Value { get; set; }</code></pre>
   
 	<h3 id="set-number-format">Set number format for data cells</h3>
 
 	<p>The <code>Number&shy;Format</code> parameter allows you to provide a <a href="http://office.microsoft.com/en-001/excel-help/create-a-custom-number-format-HP010342372.aspx">custom Excel number format</a> to alter the number format used for data in a given column. For example, the following snippet will align numbers on the decimal point:</p>
 
-	<pre class="highlight csharp"><code><span class="na">[ExcelColumn(NumberFormat = "???.???")]</span>
-<span class="k">public</span> <span class="kt">decimal</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></code></pre>
+	<pre><code class="language-csharp">[ExcelColumn(NumberFormat = "???.???")]
+public decimal Value { get; set; }</code></pre>
   	
 	<h3 id="ignore-a-column">Ignore a column</h3>
 
 	<p>To prevent a property from appearing as a column in the generated Excel file, set the <code>Ignore</code> parameter to true.</p>
 
-	<pre class="highlight csharp"><code><span class="na">[ExcelColumn(Ignore = true)]</span>
-<span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></code></pre>
+	<pre><code class="language-csharp">[ExcelColumn(Ignore = true)]
+public string Value { get; set; }</code></pre>
   
 	<h3 id="customise-display-order">Customise display order</h3>
 
@@ -162,25 +162,25 @@
 
 	<p>Confusing? Here's an example showing all of these rules at work:</p>
 
-	<pre class="highlight csharp"><code><span class="c1">// Second, because it has an implicit Order of -1 and is the</span>
-<span class="c1">// first item with that Order value.</span>
-<span class="k">public</span> <span class="kt">string</span> <span class="n">Value1</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+	<pre><code class="language-csharp">// Second, because it has an implicit Order of -1 and is the
+// first item with that Order value.
+public string Value1 { get; set; }
 
-<span class="c1">// Last, because it has the highest Order value.</span>
-<span class="na">[ExcelColumn(Order = 2)]</span>
-<span class="k">public</span> <span class="kt">string</span> <span class="n">Value2</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+// Last, because it has the highest Order value.
+[ExcelColumn(Order = 2)]
+public string Value2 { get; set; }
 
-<span class="c1">// Second-to-last, because it has the second-highest Order value.</span>
-<span class="na">[ExcelColumn(Order = 1)]</span>
-<span class="k">public</span> <span class="kt">string</span> <span class="n">Value3</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+// Second-to-last, because it has the second-highest Order value.
+[ExcelColumn(Order = 1)]
+public string Value3 { get; set; }
 
-<span class="c1">// First, because it has the lowest Order value.</span>
-<span class="na">[ExcelColumn(Order = -2)]</span>
-<span class="k">public</span> <span class="kt">string</span> <span class="n">Value4</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+// First, because it has the lowest Order value.
+[ExcelColumn(Order = -2)]
+public string Value4 { get; set; }
 
-<span class="c1">// Third, because it has an implicit Order of -1 and is the</span>
-<span class="c1">// second item with that Order value.</span>
-<span class="k">public</span> <span class="kt">string</span> <span class="n">Value5</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span></code></pre>
+// Third, because it has an implicit Order of -1 and is the
+// second item with that Order value.
+public string Value5 { get; set; }</code></pre>
   
 	<h2 id="future-work">Future work</h2>
 
@@ -237,3 +237,6 @@ ga('send', 'pageview');
 	toggle.addEventListener('click', toggleContents);
 	toggleContents();
 </script>
+
+<script src="prism/prism.js"></script>
+<script src="prism/prism.csharp.js"></script>
