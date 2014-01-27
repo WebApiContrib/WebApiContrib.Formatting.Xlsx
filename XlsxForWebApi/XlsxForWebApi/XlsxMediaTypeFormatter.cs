@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Security.Permissions;
 using System.Threading.Tasks;
 using System.Web.ModelBinding;
+using util = XlsxForWebApi.FormatterUtils;
 
 namespace XlsxForWebApi
 {
@@ -105,9 +106,8 @@ namespace XlsxForWebApi
             string fileName;
 
             // Look for ExcelDocumentAttribute on class.
-            var itemType = FormatterUtils.GetEnumerableItemType(type);
-            
-            var excelDocumentAttribute = FormatterUtils.GetAttribute<ExcelDocumentAttribute>(itemType ?? type);
+            var itemType = util.GetEnumerableItemType(type);
+            var excelDocumentAttribute = util.GetAttribute<ExcelDocumentAttribute>(itemType ?? type);
 
             if (excelDocumentAttribute != null && !string.IsNullOrEmpty(excelDocumentAttribute.FileName))
             {
@@ -133,36 +133,63 @@ namespace XlsxForWebApi
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override Task WriteToStreamAsync(Type type, object value, System.IO.Stream writeStream, System.Net.Http.HttpContent content, System.Net.TransportContext transportContext)
         {
-            var data = (IEnumerable<object>)value;
-
             // Create a worksheet
             var package = new ExcelPackage();
             package.Workbook.Worksheets.Add("Data");
             var worksheet = package.Workbook.Worksheets[1];
 
-            // Default cell styles
-            if (CellStyle != null) CellStyle(worksheet.Cells.Style);
-            if (HeaderStyle != null) HeaderStyle(worksheet.Row(1).Style);
-            if (CellHeight.HasValue) worksheet.DefaultRowHeight = CellHeight.Value;
-            if (HeaderHeight.HasValue) worksheet.Row(1).Height = HeaderHeight.Value;
-            if (FreezeHeader) worksheet.View.FreezePanes(2, 1);
-
             int rowCount = 0;
+            var valueType = value.GetType();
 
-            var fields = new List<string>();
-            var fieldInfo = new ExcelFieldInfoCollection();
+            // Apply cell styles
+            if (CellStyle != null) CellStyle(worksheet.Cells.Style);
+            if (CellHeight.HasValue) worksheet.DefaultRowHeight = CellHeight.Value;
 
-            // Use all public, parameterless, readable properties of inner type.
-            var itemType = FormatterUtils.GetEnumerableItemType(value.GetType());
-            if (itemType == null) throw new ArgumentException("Only IEnumerable<T> values can be deserialised using the Excel formatter.");
+            // Get the item type.
+            var itemType = (util.IsSimpleType(valueType))
+                ? null
+                : util.GetEnumerableItemType(valueType);
 
-            var serialisableMembers = FormatterUtils.GetMemberNames(itemType);
+            // If a single object was passed, treat it like a list with one value.
+            if (itemType == null)
+            {
+                itemType = valueType;
+                value = new object[] { value };
+            }
+
+            // Enumerations of primitive types are also handled separately, since they have
+            // no properties to serialise (and thus, no headers or attributes to consider).
+            if (util.IsSimpleType(itemType))
+            {
+                // Can't convert IEnumerable<primitive> to IEnumerable<object>
+                var values = (IEnumerable) value;
+
+                foreach (var val in values)
+                {
+                    AppendRow(new object[] { val }, worksheet, ref rowCount);
+                }
+
+                // Autofit cells if specified.
+                if (AutoFit) worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Save and done.
+                return Task.Factory.StartNew(() => package.SaveAs(writeStream));
+            }
+
+            var data = value as IEnumerable<object>;
+
+            // What remains is an enumeration of object types.
+            var serialisableMembers = util.GetMemberNames(itemType);
 
             var metadata = ModelMetadataProviders.Current.GetMetadataForType(null, itemType);
             
             var properties = (from p in itemType.GetProperties()
                               where p.CanRead & p.GetGetMethod().IsPublic & p.GetGetMethod().GetParameters().Length == 0
                               select p).ToList();
+
+
+            var fields = new List<string>();
+            var fieldInfo = new ExcelFieldInfoCollection();
 
             // Instantiate field names and fieldInfo lists with serialisable members.
             foreach (var field in serialisableMembers)
@@ -173,7 +200,7 @@ namespace XlsxForWebApi
                 if (prop == null) continue;
 
                 fields.Add(field);
-                fieldInfo.Add(new ExcelFieldInfo(field, FormatterUtils.GetAttribute<ExcelColumnAttribute>(prop)));
+                fieldInfo.Add(new ExcelFieldInfo(field, util.GetAttribute<ExcelColumnAttribute>(prop)));
             }
 
             if (metadata != null && metadata.Properties != null)
@@ -193,8 +220,9 @@ namespace XlsxForWebApi
                 }
             }
             
-            if (fields.Count <= 0) return Task.Factory.StartNew(() => package.SaveAs(writeStream));
+            if (fields.Count == 0) return Task.Factory.StartNew(() => package.SaveAs(writeStream));
 
+            // Add header row
             AppendRow((from f in fieldInfo select f.Header).ToList(), worksheet, ref rowCount);
 
             // Output each row of data
@@ -223,10 +251,15 @@ namespace XlsxForWebApi
                 }
             }
 
+            // Header cell styles
+            if (HeaderStyle != null) HeaderStyle(worksheet.Row(1).Style);
+            if (HeaderHeight.HasValue) worksheet.Row(1).Height = HeaderHeight.Value;
+            if (FreezeHeader) worksheet.View.FreezePanes(2, 1);
+
             dynamic cells = worksheet.Cells[worksheet.Dimension.Address];
 
+            // Add autofilter and fit to max column width (if requested).
             cells.AutoFilter = AutoFilter;
-
             if (AutoFit) cells.AutoFitColumns();
 
             return Task.Factory.StartNew(() => package.SaveAs(writeStream));
@@ -239,7 +272,7 @@ namespace XlsxForWebApi
         /// <param name="name">The name of the property we want.</param>
         private static object GetFieldOrPropertyValue(object rowObject, string name)
         {
-            var rowValue = FormatterUtils.GetFieldOrPropertyValue(rowObject, name);
+            var rowValue = util.GetFieldOrPropertyValue(rowObject, name);
 
             if (IsExcelSupportedType(rowValue)) return rowValue;
 
@@ -273,12 +306,15 @@ namespace XlsxForWebApi
 
         public override bool CanWriteType(Type type)
         {
-            return type.GetInterface(typeof(IEnumerable).FullName) != null && typeof(IEnumerable).IsAssignableFrom(type);
+            // Should be able to serialise any type.
+            return true;
         }
 
         public override bool CanReadType(Type type)
         {
-            return type.GetInterface(typeof(IEnumerable).FullName) != null && typeof(IEnumerable).IsAssignableFrom(type);
+            // Not yet possible; see issue page to track progress:
+            // https://github.com/jordangray/xlsx-for-web-api/issues/5
+            return false;
         }
 
         #endregion
