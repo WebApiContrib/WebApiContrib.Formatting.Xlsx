@@ -59,7 +59,7 @@
 
 	<h2 id="limitations">Limitations</h2>
 
-	<p><code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> can only serialise collections that implement <code>IEnumerable&lt;&gt;</code> and does not work with nested/complex item types. Extending the range of types this formatter can work with is a priority for future work.</p>
+	<p><code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> does not do deep serialisation of complex (i.e. nested) types, nor does it yet deserialise data from Excel. Both of these are major priorities; see the <a href="https://github.com/jordangray/xlsx-for-web-api/issues/milestones">project milestones</a> for a rough schedule.
 
 	<h2 id="setting-it-up">Setting it up</h2>
 
@@ -70,11 +70,11 @@
 			<pre><code class="language-csharp">config.Formatters.Add(new XlsxMediaTypeFormatter()); // Where config = System.Web.Http.HttpConfiguration.</code></pre>
 	</ol>
 
-	<p>You are now good to go forth and serialise; however, you may find the generated Excel output a tad boring. Enter the advanced formatter instantiation options!</p>
+	<p>You are now good to go forth and serialise; however, you may find the generated Excel output a tad boring. Enter the advanced formatter instantiation options!
 
 	<h3 id="advanced-setup-options">Advanced setup options</h3>
 
-	<p>The <code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> provides a number of options for improving the appearance of generated Excel files.</p>
+	<p>The <code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> provides a number of options for improving the appearance of generated Excel files.
 
 	<dl>
 		<dt><code>autoFit</code>
@@ -185,12 +185,14 @@ public string Value5 { get; set; }</code></pre>
 	<h2 id="future-work">Future work</h2>
 
 	<ul>
-		<li>Extend the range of types that can be serialized to include non-enumerables and nested item types.
+		<li>Allow serialisation of complex/nested types.
 		<li>Allow reading from Excel documents.
-		<li>Provide finer control over serialisation of individual properties (e.g. to serialise booleans as "yes" or "no").
+		<li>Provide much, much finer control over serialisation of individual classes and properties.
 	</ul>
 	
-	<p>Have an idea that you don't see here? Can't figure out how to do something? Would like to use this, but it doesn't cover your needs? Go ahead and open an issue!</p>
+	<p>For more details on planned work and the current project schedule, refer to the <a href="https://github.com/jordangray/xlsx-for-web-api/issues/milestones">project milestones</a>.
+
+	<p>Have an idea that you don't see here? Can't figure out how to do something? Would like to use this, but it doesn't cover your needs? Go ahead and <a href="https://github.com/jordangray/xlsx-for-web-api/issues/new">open an issue</a>!</p>
 </main>
 
 <footer>
