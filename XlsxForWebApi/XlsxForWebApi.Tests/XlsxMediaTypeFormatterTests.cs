@@ -93,11 +93,13 @@ namespace XlsxForWebApi.Tests
             Assert.AreEqual("Header 3", sheet.GetValue<string>(1, 4), "Fourth column header is incorrect.");
             Assert.AreEqual("Value2", sheet.GetValue<string>(1, 5), "Fifth column header is incorrect.");
             Assert.AreEqual(data[0].Value4, sheet.GetValue<double>(2, 1), "Data in A2 is incorrect.");
+            Assert.AreEqual("???.???", sheet.Cells[2, 1].Style.Numberformat.Format, "NumberFormat of A2 is incorrect.");
             Assert.AreEqual(data[0].Value1, sheet.GetValue<string>(2, 2), "Data in B2 is incorrect.");
             Assert.AreEqual(data[0].Value5.ToString(), sheet.GetValue<string>(2, 3), "Data in C2 is incorrect.");
             Assert.AreEqual(data[0].Value3.ToString(), sheet.GetValue<string>(2, 4), "Data in D2 is incorrect.");
             Assert.AreEqual(data[0].Value2, sheet.GetValue<DateTime>(2, 5), "Data in E2 is incorrect.");
             Assert.AreEqual(data[1].Value4, sheet.GetValue<double>(3, 1), "Data in A3 is incorrect.");
+            Assert.AreEqual("???.???", sheet.Cells[3, 1].Style.Numberformat.Format, "NumberFormat of A3 is incorrect.");
             Assert.AreEqual(data[1].Value1, sheet.GetValue<string>(3, 2), "Data in B3 is incorrect.");
             Assert.AreEqual(data[1].Value5.ToString(), sheet.GetValue<string>(3, 3), "Data in C3 is incorrect.");
             Assert.AreEqual(data[1].Value3.ToString(), sheet.GetValue<string>(3, 4), "Data in D3 is incorrect.");
