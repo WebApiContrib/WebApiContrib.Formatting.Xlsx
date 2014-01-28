@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System;
+using System.Linq;
 
 namespace XlsxForWebApi.Tests
 {
@@ -85,9 +86,31 @@ namespace XlsxForWebApi.Tests
         }
 
         [TestMethod]
+        public void GetMemberNames_AnonymousType_ReturnsMemberNamesInOrderDefined()
+        {
+            var anonymous = new { prop1 = "value1", prop2 = "value2" };
+            var memberNames = FormatterUtils.GetMemberNames(anonymous.GetType());
+
+            Assert.IsNotNull(memberNames);
+            Assert.AreEqual(2, memberNames.Count);
+            Assert.AreEqual("prop1", memberNames[0]);
+            Assert.AreEqual("prop2", memberNames[1]);
+        }
+
+        [TestMethod]
         public void GetMemberInfo_SimpleTestItem_ReturnsMemberInfoList()
         {
             var memberInfo = FormatterUtils.GetMemberInfo(typeof(SimpleTestItem));
+
+            Assert.IsNotNull(memberInfo);
+            Assert.AreEqual(2, memberInfo.Count);
+        }
+
+        [TestMethod]
+        public void GetMemberInfo_AnonymousType_ReturnsMemberInfoList()
+        {
+            var anonymous = new { prop1 = "value1", prop2 = "value2" };
+            var memberInfo = FormatterUtils.GetMemberInfo(anonymous.GetType());
 
             Assert.IsNotNull(memberInfo);
             Assert.AreEqual(2, memberInfo.Count);
@@ -114,6 +137,40 @@ namespace XlsxForWebApi.Tests
         }
 
         [TestMethod]
+        public void GetEnumerableItemType_ArrayOfSimpleTestItem_ReturnsTestItemType()
+        {
+            var testItemArray = typeof(SimpleTestItem[]);
+            var itemType = FormatterUtils.GetEnumerableItemType(testItemArray);
+
+            Assert.IsNotNull(itemType);
+            Assert.AreEqual(typeof(SimpleTestItem), itemType);
+        }
+
+        [TestMethod]
+        public void GetEnumerableItemType_ArrayOfAnonymousObject_ReturnsTestItemType()
+        {
+            var anonymous = new { prop1 = "value1", prop2 = "value2" };
+            var anonymousArray = new[] { anonymous };
+
+            var itemType = FormatterUtils.GetEnumerableItemType(anonymousArray.GetType());
+
+            Assert.IsNotNull(itemType);
+            Assert.AreEqual(anonymous.GetType(), itemType);
+        }
+
+        [TestMethod]
+        public void GetEnumerableItemType_ListOfAnonymousObject_ReturnsTestItemType()
+        {
+            var anonymous = new { prop1 = "value1", prop2 = "value2" };
+            var anonymousList = new[] { anonymous }.ToList();
+
+            var itemType = FormatterUtils.GetEnumerableItemType(anonymousList.GetType());
+
+            Assert.IsNotNull(itemType);
+            Assert.AreEqual(anonymous.GetType(), itemType);
+        }
+
+        [TestMethod]
         public void GetFieldOrPropertyValue_ComplexTestItem_ReturnsPropertyValues()
         {
             var obj = new ComplexTestItem() {
@@ -134,7 +191,7 @@ namespace XlsxForWebApi.Tests
         }
 
         [TestMethod]
-        public void GetFieldOrPropertyValueTyped_ComplexTestItem_ReturnsPropertyValues()
+        public void GetFieldOrPropertyValueT_ComplexTestItem_ReturnsPropertyValues()
         {
             var obj = new ComplexTestItem() {
                 Value1 = "Value 1",
@@ -151,6 +208,26 @@ namespace XlsxForWebApi.Tests
             Assert.AreEqual(obj.Value4, FormatterUtils.GetFieldOrPropertyValue<double>(obj, "Value4"));
             Assert.AreEqual(obj.Value5, FormatterUtils.GetFieldOrPropertyValue<TestEnum>(obj, "Value5"));
             Assert.AreEqual(obj.Value6, FormatterUtils.GetFieldOrPropertyValue<string>(obj, "Value6"));
+        }
+
+        [TestMethod]
+        public void GetFieldOrPropertyValue_AnonymousObject_ReturnsPropertyValues()
+        {
+            var obj = new { prop1 = "test", prop2 = 2.0, prop3 = DateTime.Today };
+
+            Assert.AreEqual(obj.prop1, FormatterUtils.GetFieldOrPropertyValue(obj, "prop1"));
+            Assert.AreEqual(obj.prop2, FormatterUtils.GetFieldOrPropertyValue(obj, "prop2"));
+            Assert.AreEqual(obj.prop3, FormatterUtils.GetFieldOrPropertyValue(obj, "prop3"));
+        }
+
+        [TestMethod]
+        public void GetFieldOrPropertyValueT_AnonymousObject_ReturnsPropertyValues()
+        {
+            var obj = new { prop1 = "test", prop2 = 2.0, prop3 = DateTime.Today };
+
+            Assert.AreEqual(obj.prop1, FormatterUtils.GetFieldOrPropertyValue<string>(obj, "prop1"));
+            Assert.AreEqual(obj.prop2, FormatterUtils.GetFieldOrPropertyValue<double>(obj, "prop2"));
+            Assert.AreEqual(obj.prop3, FormatterUtils.GetFieldOrPropertyValue<DateTime>(obj, "prop3"));
         }
 
         [TestMethod]
