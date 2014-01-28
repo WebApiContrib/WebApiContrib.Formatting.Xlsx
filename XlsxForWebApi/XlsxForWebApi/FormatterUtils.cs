@@ -139,7 +139,6 @@ namespace XlsxForWebApi
         public static object GetFieldOrPropertyValue(object obj, string name)
         {
             var type = obj.GetType();
-
             var member = type.GetField(name) ?? type.GetProperty(name) as MemberInfo;
 
             if (member == null) return null;
@@ -170,25 +169,11 @@ namespace XlsxForWebApi
         public static T GetFieldOrPropertyValue<T>(object obj, string name)
         {
             var type = obj.GetType();
-
             var member = type.GetField(name) ?? type.GetProperty(name) as MemberInfo;
 
             if (member == null) return default(T);
 
-            object value;
-
-            switch (member.MemberType)
-            {
-                case MemberTypes.Property:
-                    value = ((PropertyInfo)member).GetValue(obj, null);
-                    break;
-                case MemberTypes.Field:
-                    value = ((FieldInfo)member).GetValue(obj);
-                    break;
-                default:
-                    value = null;
-                    break;
-            }
+            var value = GetFieldOrPropertyValue(obj, name);
 
             return (T)value;
         }
@@ -204,7 +189,7 @@ namespace XlsxForWebApi
             return
                 type.IsValueType ||
                 type.IsPrimitive ||
-                new Type[] { 
+                new Type[] {
 		            typeof(String),
 		            typeof(Decimal),
 		            typeof(DateTime),

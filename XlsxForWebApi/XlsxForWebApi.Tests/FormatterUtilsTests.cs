@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System;
 
 namespace XlsxForWebApi.Tests
 {
@@ -110,6 +111,82 @@ namespace XlsxForWebApi.Tests
 
             Assert.IsNotNull(itemType);
             Assert.AreEqual(typeof(SimpleTestItem), itemType);
+        }
+
+        [TestMethod]
+        public void GetFieldOrPropertyValue_ComplexTestItem_ReturnsPropertyValues()
+        {
+            var obj = new ComplexTestItem() {
+                Value1 = "Value 1",
+                Value2 = DateTime.Today,
+                Value3 = true,
+                Value4 = 100.1,
+                Value5 = TestEnum.Second,
+                Value6 = "Value 6"
+            };
+
+            Assert.AreEqual(obj.Value1, FormatterUtils.GetFieldOrPropertyValue(obj, "Value1"));
+            Assert.AreEqual(obj.Value2, FormatterUtils.GetFieldOrPropertyValue(obj, "Value2"));
+            Assert.AreEqual(obj.Value3, FormatterUtils.GetFieldOrPropertyValue(obj, "Value3"));
+            Assert.AreEqual(obj.Value4, FormatterUtils.GetFieldOrPropertyValue(obj, "Value4"));
+            Assert.AreEqual(obj.Value5, FormatterUtils.GetFieldOrPropertyValue(obj, "Value5"));
+            Assert.AreEqual(obj.Value6, FormatterUtils.GetFieldOrPropertyValue(obj, "Value6"));
+        }
+
+        [TestMethod]
+        public void GetFieldOrPropertyValueTyped_ComplexTestItem_ReturnsPropertyValues()
+        {
+            var obj = new ComplexTestItem() {
+                Value1 = "Value 1",
+                Value2 = DateTime.Today,
+                Value3 = true,
+                Value4 = 100.1,
+                Value5 = TestEnum.Second,
+                Value6 = "Value 6"
+            };
+
+            Assert.AreEqual(obj.Value1, FormatterUtils.GetFieldOrPropertyValue<string>(obj, "Value1"));
+            Assert.AreEqual(obj.Value2, FormatterUtils.GetFieldOrPropertyValue<DateTime>(obj, "Value2"));
+            Assert.AreEqual(obj.Value3, FormatterUtils.GetFieldOrPropertyValue<bool>(obj, "Value3"));
+            Assert.AreEqual(obj.Value4, FormatterUtils.GetFieldOrPropertyValue<double>(obj, "Value4"));
+            Assert.AreEqual(obj.Value5, FormatterUtils.GetFieldOrPropertyValue<TestEnum>(obj, "Value5"));
+            Assert.AreEqual(obj.Value6, FormatterUtils.GetFieldOrPropertyValue<string>(obj, "Value6"));
+        }
+
+        [TestMethod]
+        public void IsSimpleType_SimpleTypes_ReturnsTrue()
+        {
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(bool)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(byte)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(sbyte)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(char)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(DateTime)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(DateTimeOffset)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(decimal)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(double)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(float)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(Guid)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(int)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(uint)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(long)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(ulong)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(short)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(TimeSpan)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(ushort)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(string)));
+            Assert.IsTrue(FormatterUtils.IsSimpleType(typeof(TestEnum)));
+        }
+
+        [TestMethod]
+        public void IsSimpleType_ComplexTypes_ReturnsFalse()
+        {
+            var anonymous = new { prop = "val" };
+
+            Assert.IsFalse(FormatterUtils.IsSimpleType(anonymous.GetType()));
+            Assert.IsFalse(FormatterUtils.IsSimpleType(typeof(Array)));
+            Assert.IsFalse(FormatterUtils.IsSimpleType(typeof(IEnumerable<>)));
+            Assert.IsFalse(FormatterUtils.IsSimpleType(typeof(object)));
+            Assert.IsFalse(FormatterUtils.IsSimpleType(typeof(SimpleTestItem)));
         }
     }
 }
