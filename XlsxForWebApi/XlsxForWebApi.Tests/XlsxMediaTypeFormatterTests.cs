@@ -62,7 +62,46 @@ namespace XlsxForWebApi.Tests
             Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
             Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
             Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Value in first cell is incorrect.");
-            Assert.AreEqual("3,2", sheet.GetValue<string>(3, 2), "Value in last cell is incorrect.");
+            Assert.AreEqual(data[1].Value2, sheet.GetValue<string>(3, 2), "Value in last cell is incorrect.");
+        }
+
+        [TestMethod]
+        public void WriteToStreamAsync_WithListOfComplexTestItem_WritesExcelDocumentToStream()
+        {
+            var data = new List<ComplexTestItem> { new ComplexTestItem { Value1 = "Item 1",
+                                                                         Value2 = DateTime.Today,
+                                                                         Value3 = true,
+                                                                         Value4 = 100.1,
+                                                                         Value5 = TestEnum.First,
+                                                                         Value6 = "Ignored" },
+
+                                                   new ComplexTestItem { Value1 = "Item 2",
+                                                                         Value2 = DateTime.Today.AddDays(1),
+                                                                         Value3 = false,
+                                                                         Value4 = 200.2,
+                                                                         Value5 = TestEnum.Second,
+                                                                         Value6 = "Also ignored" } };
+
+            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+
+            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
+            Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
+            Assert.AreEqual(5.0, sheet.Dimension.End.Column, "Worksheet should have five columns.");
+            Assert.AreEqual("Header 4", sheet.GetValue<string>(1, 1), "First column header is incorrect.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 2), "Second column header is incorrect.");
+            Assert.AreEqual("Header 5", sheet.GetValue<string>(1, 3), "Third column header is incorrect.");
+            Assert.AreEqual("Header 3", sheet.GetValue<string>(1, 4), "Fourth column header is incorrect.");
+            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 5), "Fifth column header is incorrect.");
+            Assert.AreEqual(data[0].Value4, sheet.GetValue<double>(2, 1), "Data in A2 is incorrect.");
+            Assert.AreEqual(data[0].Value1, sheet.GetValue<string>(2, 2), "Data in B2 is incorrect.");
+            Assert.AreEqual(data[0].Value5.ToString(), sheet.GetValue<string>(2, 3), "Data in C2 is incorrect.");
+            Assert.AreEqual(data[0].Value3.ToString(), sheet.GetValue<string>(2, 4), "Data in D2 is incorrect.");
+            Assert.AreEqual(data[0].Value2, sheet.GetValue<DateTime>(2, 5), "Data in E2 is incorrect.");
+            Assert.AreEqual(data[1].Value4, sheet.GetValue<double>(3, 1), "Data in A3 is incorrect.");
+            Assert.AreEqual(data[1].Value1, sheet.GetValue<string>(3, 2), "Data in B3 is incorrect.");
+            Assert.AreEqual(data[1].Value5.ToString(), sheet.GetValue<string>(3, 3), "Data in C3 is incorrect.");
+            Assert.AreEqual(data[1].Value3.ToString(), sheet.GetValue<string>(3, 4), "Data in D3 is incorrect.");
+            Assert.AreEqual(data[1].Value2, sheet.GetValue<DateTime>(3, 5), "Data in E3 is incorrect.");
         }
 
         [TestMethod]
@@ -77,7 +116,7 @@ namespace XlsxForWebApi.Tests
             Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
             Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
             Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Value in first cell is incorrect.");
-            Assert.AreEqual("3,2", sheet.GetValue<string>(3, 2), "Value in last cell is incorrect.");
+            Assert.AreEqual(data[1].Value2, sheet.GetValue<string>(3, 2), "Value in last cell is incorrect.");
         }
 
         [TestMethod]
@@ -91,7 +130,7 @@ namespace XlsxForWebApi.Tests
             Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have two rows (including header column).");
             Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
             Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Value in first cell is incorrect.");
-            Assert.AreEqual("2,2", sheet.GetValue<string>(2, 2), "Value in last cell is incorrect.");
+            Assert.AreEqual(data.Value2, sheet.GetValue<string>(2, 2), "Value in last cell is incorrect.");
         }
 
         [TestMethod]
