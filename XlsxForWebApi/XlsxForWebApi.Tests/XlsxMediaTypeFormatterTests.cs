@@ -13,6 +13,7 @@ using System.Runtime.Serialization;
 using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Drawing;
 
 namespace XlsxForWebApi.Tests
 {
@@ -88,8 +89,8 @@ namespace XlsxForWebApi.Tests
             Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
             Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
             Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Heading in A1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Heading in B1 is incorrect.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
             Assert.AreEqual(data[0].Value1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
             Assert.AreEqual(data[0].Value2, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
             Assert.AreEqual(data[1].Value1, sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
@@ -107,8 +108,8 @@ namespace XlsxForWebApi.Tests
             Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
             Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
             Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Heading in A1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Heading in B1 is incorrect.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
             Assert.AreEqual(data[0].Value1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
             Assert.AreEqual(data[0].Value2, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
             Assert.AreEqual(data[1].Value1, sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
@@ -125,8 +126,8 @@ namespace XlsxForWebApi.Tests
             Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
             Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have two rows (including header column).");
             Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Heading in A1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Heading in B1 is incorrect.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
             Assert.AreEqual(data.Value1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
             Assert.AreEqual(data.Value2, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
         }
@@ -146,11 +147,11 @@ namespace XlsxForWebApi.Tests
             Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
             Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have two rows (including header column).");
             Assert.AreEqual(5.0, sheet.Dimension.End.Column, "Worksheet should have five columns.");
-            Assert.AreEqual("Header 4", sheet.GetValue<string>(1, 1), "Heading in A1 is incorrect.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 2), "Heading in B1 is incorrect.");
-            Assert.AreEqual("Header 5", sheet.GetValue<string>(1, 3), "Heading in C1 is incorrect.");
-            Assert.AreEqual("Header 3", sheet.GetValue<string>(1, 4), "Heading in D1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 5), "Heading in E1 is incorrect.");
+            Assert.AreEqual("Header 4", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
+            Assert.AreEqual("Header 5", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
+            Assert.AreEqual("Header 3", sheet.GetValue<string>(1, 4), "Header in D1 is incorrect.");
+            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 5), "Header in E1 is incorrect.");
             Assert.AreEqual(data.Value4, sheet.GetValue<double>(2, 1), "Data in A2 is incorrect.");
             Assert.AreEqual("???.???", sheet.Cells[2, 1].Style.Numberformat.Format, "NumberFormat of A2 is incorrect.");
             Assert.AreEqual(data.Value1, sheet.GetValue<string>(2, 2), "Data in B2 is incorrect.");
@@ -181,11 +182,11 @@ namespace XlsxForWebApi.Tests
             Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
             Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
             Assert.AreEqual(5.0, sheet.Dimension.End.Column, "Worksheet should have five columns.");
-            Assert.AreEqual("Header 4", sheet.GetValue<string>(1, 1), "Heading in A1 is incorrect.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 2), "Heading in B1 is incorrect.");
-            Assert.AreEqual("Header 5", sheet.GetValue<string>(1, 3), "Heading in C1 is incorrect.");
-            Assert.AreEqual("Header 3", sheet.GetValue<string>(1, 4), "Heading in D1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 5), "Heading in E1 is incorrect.");
+            Assert.AreEqual("Header 4", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
+            Assert.AreEqual("Header 5", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
+            Assert.AreEqual("Header 3", sheet.GetValue<string>(1, 4), "Header in D1 is incorrect.");
+            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 5), "Header in E1 is incorrect.");
             Assert.AreEqual(data[0].Value4, sheet.GetValue<double>(2, 1), "Data in A2 is incorrect.");
             Assert.AreEqual("???.???", sheet.Cells[2, 1].Style.Numberformat.Format, "NumberFormat of A2 is incorrect.");
             Assert.AreEqual(data[0].Value1, sheet.GetValue<string>(2, 2), "Data in B2 is incorrect.");
@@ -210,9 +211,9 @@ namespace XlsxForWebApi.Tests
             Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
             Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have two rows.");
             Assert.AreEqual(3.0, sheet.Dimension.End.Column, "Worksheet should have three columns.");
-            Assert.AreEqual("prop1", sheet.GetValue<string>(1, 1), "Heading in A1 is incorrect.");
-            Assert.AreEqual("prop2", sheet.GetValue<string>(1, 2), "Heading in B1 is incorrect.");
-            Assert.AreEqual("prop3", sheet.GetValue<string>(1, 3), "Heading in C1 is incorrect.");
+            Assert.AreEqual("prop1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("prop2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
+            Assert.AreEqual("prop3", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
             Assert.AreEqual(data.prop1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
             Assert.AreEqual(data.prop2, sheet.GetValue<double>(2, 2), "Value in B2 is incorrect.");
             Assert.AreEqual(data.prop3, sheet.GetValue<DateTime>(2, 3), "Value in C2 is incorrect.");
@@ -231,9 +232,9 @@ namespace XlsxForWebApi.Tests
             Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
             Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows.");
             Assert.AreEqual(3.0, sheet.Dimension.End.Column, "Worksheet should have three columns.");
-            Assert.AreEqual("prop1", sheet.GetValue<string>(1, 1), "Heading in A1 is incorrect.");
-            Assert.AreEqual("prop2", sheet.GetValue<string>(1, 2), "Heading in B1 is incorrect.");
-            Assert.AreEqual("prop3", sheet.GetValue<string>(1, 3), "Heading in C1 is incorrect.");
+            Assert.AreEqual("prop1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("prop2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
+            Assert.AreEqual("prop3", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
             Assert.AreEqual(data[0].prop1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
             Assert.AreEqual(data[0].prop2, sheet.GetValue<double>(2, 2), "Value in B2 is incorrect.");
             Assert.AreEqual(data[0].prop3, sheet.GetValue<DateTime>(2, 3), "Value in C2 is incorrect.");
@@ -293,7 +294,7 @@ namespace XlsxForWebApi.Tests
             Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have one row.");
             Assert.AreEqual(1.0, sheet.Dimension.End.Column, "Worksheet should have one column.");
             Assert.AreEqual(data[0], sheet.GetValue<int>(1, 1), "Value in A1 is incorrect.");
-            Assert.AreEqual(data[1], sheet.GetValue<int>(2, 1), "Value in A1 is incorrect.");
+            Assert.AreEqual(data[1], sheet.GetValue<int>(2, 1), "Value in A2 is incorrect.");
         }
 
         [TestMethod]
@@ -321,6 +322,69 @@ namespace XlsxForWebApi.Tests
             Assert.AreEqual(1.0, sheet.Dimension.End.Column, "Worksheet should have one column.");
             Assert.AreEqual(data[0], sheet.GetValue<DateTime>(1, 1), "Value in A1 is incorrect.");
             Assert.AreEqual(data[1], sheet.GetValue<DateTime>(2, 1), "Value in A2 is incorrect.");
+        }
+
+        [TestMethod]
+        public void WriteToStreamAsync_WithCellAndHeaderFormats_WritesFormattedExcelDocumentToStream()
+        {
+            var data = new[] { new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" },
+                               new SimpleTestItem { Value1 = "3,1", Value2 = "3,2" }  };
+
+            var formatter = new XlsxMediaTypeFormatter(
+                cellStyle: (ExcelStyle s) =>
+                {
+                    s.Font.Size = 15f;
+                    s.Font.Bold = true;
+                },
+                headerStyle: (ExcelStyle s) =>
+                {
+                    s.Font.Size = 18f;
+                    s.Border.Bottom.Style = ExcelBorderStyle.Thick;
+                }
+            );
+
+            var sheet = GetWorksheetFromStream(formatter, data);
+
+            Assert.IsTrue(sheet.Cells[1, 1].Style.Font.Bold, "Header in A1 should be bold.");
+            Assert.IsTrue(sheet.Cells[1, 2].Style.Font.Bold, "Header in B1 should be bold.");
+            Assert.IsTrue(sheet.Cells[1, 3].Style.Font.Bold, "Header in C1 should be bold.");
+            Assert.IsTrue(sheet.Cells[2, 1].Style.Font.Bold, "Value in A2 should be bold.");
+            Assert.IsTrue(sheet.Cells[2, 2].Style.Font.Bold, "Value in B2 should be bold.");
+            Assert.IsTrue(sheet.Cells[2, 3].Style.Font.Bold, "Value in C2 should be bold.");
+            Assert.IsTrue(sheet.Cells[3, 1].Style.Font.Bold, "Value in A3 should be bold.");
+            Assert.IsTrue(sheet.Cells[3, 2].Style.Font.Bold, "Value in B3 should be bold.");
+            Assert.IsTrue(sheet.Cells[3, 3].Style.Font.Bold, "Value in C3 should be bold.");
+            Assert.AreEqual(18f, sheet.Cells[1, 1].Style.Font.Size, "Header in A1 should be in size 18 font.");
+            Assert.AreEqual(18f, sheet.Cells[1, 2].Style.Font.Size, "Header in B1 should be in size 18 font.");
+            Assert.AreEqual(18f, sheet.Cells[1, 3].Style.Font.Size, "Header in C1 should be in size 18 font.");
+            Assert.AreEqual(15f, sheet.Cells[2, 1].Style.Font.Size, "Value in A2 should be in size 15 font.");
+            Assert.AreEqual(15f, sheet.Cells[2, 2].Style.Font.Size, "Value in B2 should be in size 15 font.");
+            Assert.AreEqual(15f, sheet.Cells[2, 3].Style.Font.Size, "Value in C2 should be in size 15 font.");
+            Assert.AreEqual(15f, sheet.Cells[3, 1].Style.Font.Size, "Value in A3 should be in size 15 font.");
+            Assert.AreEqual(15f, sheet.Cells[3, 2].Style.Font.Size, "Value in B3 should be in size 15 font.");
+            Assert.AreEqual(15f, sheet.Cells[3, 3].Style.Font.Size, "Value in C3 should be in size 15 font.");
+            Assert.AreEqual(ExcelBorderStyle.Thick, sheet.Cells[1, 1].Style.Border.Bottom.Style, "Header in A1 should have a thick border.");
+            Assert.AreEqual(ExcelBorderStyle.Thick, sheet.Cells[1, 2].Style.Border.Bottom.Style, "Header in B1 should have a thick border.");
+            Assert.AreEqual(ExcelBorderStyle.Thick, sheet.Cells[1, 3].Style.Border.Bottom.Style, "Header in C1 should have a thick border.");
+            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[2, 1].Style.Border.Bottom.Style, "Value in A2 should NOT have a thick border.");
+            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[2, 2].Style.Border.Bottom.Style, "Value in B2 should NOT have a thick border.");
+            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[2, 3].Style.Border.Bottom.Style, "Value in C2 should NOT have a thick border.");
+            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[3, 1].Style.Border.Bottom.Style, "Value in A3 should NOT have a thick border.");
+            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[3, 2].Style.Border.Bottom.Style, "Value in B3 should NOT have a thick border.");
+            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[3, 3].Style.Border.Bottom.Style, "Value in C3 should NOT have a thick border.");
+        }
+
+        [TestMethod]
+        public void WriteToStreamAsync_WithHeaderRowHeight_WritesFormattedExcelDocumentToStream()
+        {
+            var data = new[] { new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" },
+                               new SimpleTestItem { Value1 = "3,1", Value2 = "3,2" }  };
+
+            var formatter = new XlsxMediaTypeFormatter(headerHeight: 30f);
+
+            var sheet = GetWorksheetFromStream(formatter, data);
+
+            Assert.AreEqual(30f, sheet.Row(1).Height, "Row 1 should have height 30.");
         }
         
         #region Fakes and test-related classes

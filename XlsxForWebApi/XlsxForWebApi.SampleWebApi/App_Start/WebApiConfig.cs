@@ -18,7 +18,6 @@ namespace XlsxForWebApi.SampleWebApi
                 autoFilter: true,
                 freezeHeader: true,
                 headerHeight: 25f,
-                cellHeight: 20f,
                 cellStyle: (ExcelStyle s) => {
                     s.Font.SetFromFont(new Font("Segoe UI", 13f, FontStyle.Regular));
                 },

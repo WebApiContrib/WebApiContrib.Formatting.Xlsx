@@ -52,12 +52,7 @@ namespace XlsxForWebApi
         /// Height for header row. (Default if null.)
         /// </summary>
         protected double? HeaderHeight { get; set; }
-
-        /// <summary>
-        /// Height for cells. (Default if null.)
-        /// </summary>
-        protected double? CellHeight { get; set; }
-
+        
         #endregion
 
         #region Constructor
@@ -72,7 +67,7 @@ namespace XlsxForWebApi
         /// <param name="cellHeight">Height of each row of data.</param>
         /// <param name="cellStyle">An action method that modifies the worksheet cell style.</param>
         /// <param name="headerStyle">An action method that modifies the cell style of the first (header) row in the worksheet.</param>
-        public XlsxMediaTypeFormatter(bool autoFit = true, bool autoFilter = false, bool freezeHeader = false, float headerHeight = 0, float cellHeight = 0, Action<ExcelStyle> cellStyle = null, Action<ExcelStyle> headerStyle = null)
+        public XlsxMediaTypeFormatter(bool autoFit = true, bool autoFilter = false, bool freezeHeader = false, double headerHeight = 0, Action<ExcelStyle> cellStyle = null, Action<ExcelStyle> headerStyle = null)
         {
             SupportedMediaTypes.Clear();
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
@@ -82,7 +77,6 @@ namespace XlsxForWebApi
             AutoFilter = autoFilter;
             FreezeHeader = freezeHeader;
             HeaderHeight = headerHeight;
-            CellHeight = cellHeight;
             CellStyle = cellStyle;
             HeaderStyle = headerStyle;
         }
@@ -141,9 +135,8 @@ namespace XlsxForWebApi
             int rowCount = 0;
             var valueType = value.GetType();
 
-            // Apply cell styles
+            // Apply cell styles.
             if (CellStyle != null) CellStyle(worksheet.Cells.Style);
-            if (CellHeight.HasValue) worksheet.DefaultRowHeight = CellHeight.Value;
 
             // Get the item type.
             var itemType = (util.IsSimpleType(valueType))
@@ -253,14 +246,20 @@ namespace XlsxForWebApi
 
             // Header cell styles
             if (HeaderStyle != null) HeaderStyle(worksheet.Row(1).Style);
-            if (HeaderHeight.HasValue) worksheet.Row(1).Height = HeaderHeight.Value;
             if (FreezeHeader) worksheet.View.FreezePanes(2, 1);
 
-            dynamic cells = worksheet.Cells[worksheet.Dimension.Address];
+            var cells = worksheet.Cells[worksheet.Dimension.Address];
 
             // Add autofilter and fit to max column width (if requested).
             cells.AutoFilter = AutoFilter;
             if (AutoFit) cells.AutoFitColumns();
+
+            // Set header row where specified.
+            if (HeaderHeight.HasValue)
+            {
+                worksheet.Row(1).Height = HeaderHeight.Value;
+                worksheet.Row(1).CustomHeight = true;
+            }
 
             return Task.Factory.StartNew(() => package.SaveAs(writeStream));
         }
