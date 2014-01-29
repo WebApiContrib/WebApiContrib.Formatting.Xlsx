@@ -51,7 +51,7 @@
 			<ul>
 				<li>freeze header rows;
 				<li>add auto-filter;
-				<li>customize header row and cell styles/heights; and
+				<li>customize header row and cell styles; and
 				<li>autofit column widths to data.
 			</ul>
 		<li>Decent (and improving) unit test coverage.
@@ -93,10 +93,6 @@
 		<dd><strong>Default <code>0</code> (not set).</strong>
 		<dd>Set the height of the column header row.
 
-		<dt><code>cellHeight</code>
-		<dd><strong>Default <code>0</code> (not set).</strong>
-		<dd>Set the height of the data cells.
-
 		<dt><code>cellStyle</code>
 		<dd><strong>Default <code>null</code>.</strong>
 		<dd>Can take an <code>Action&#8203;&lt;Office&shy;Open&shy;Xml&#8203;.Style&#8203;.Excel&shy;Style&gt;</code> that specifies visual formatting options (such as fonts and borders) for all cells.
@@ -113,7 +109,6 @@
 	autoFilter: true,
 	freezeHeader: true,
 	headerHeight: 20f,
-	cellHeight: 18f,
 	cellStyle: (ExcelStyle s) =>
 		s.WrapText = true,
 	headerStyle: (ExcelStyle s) =>
