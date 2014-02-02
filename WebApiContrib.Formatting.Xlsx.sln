@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XlsxForWebApi", "XlsxForWebApi\XlsxForWebApi.csproj", "{B6A319B2-82A4-41BA-A895-4FC02A0D53EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiContrib.Formatting.Xlsx", "src\WebApiContrib.Formatting.Xlsx\WebApiContrib.Formatting.Xlsx.csproj", "{B6A319B2-82A4-41BA-A895-4FC02A0D53EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XlsxForWebApi.Tests", "XlsxForWebApi.Tests\XlsxForWebApi.Tests.csproj", "{91831A5B-8286-466A-8CC5-07A630493D9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiContrib.Formatting.Xlsx.Tests", "test\WebApiContrib.Formatting.Xlsx.Tests\WebApiContrib.Formatting.Xlsx.Tests.csproj", "{91831A5B-8286-466A-8CC5-07A630493D9B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11B0118B-54A0-4542-BF89-E1B1A4A5B209}"
 	ProjectSection(SolutionItems) = preProject
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XlsxForWebApi.SampleWebApi", "XlsxForWebApi.SampleWebApi\XlsxForWebApi.SampleWebApi.csproj", "{03A10509-AF42-4AEA-A3AA-D0DD4368B905}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiContrib.Formatting.Xlsx.Sample", "samples\WebApiContrib.Formatting.Xlsx.Sample\WebApiContrib.Formatting.Xlsx.Sample.csproj", "{03A10509-AF42-4AEA-A3AA-D0DD4368B905}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
