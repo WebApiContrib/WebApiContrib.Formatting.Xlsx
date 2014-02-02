@@ -124,12 +124,8 @@ dt {
 }
 
 .xlsx {
-  text-transform: lowercase;
-
-  &:before {
-    content: '.';
-    color: #aaa;
-  }
+  color: black;
+  font-weight: bold;
 }
 
 header {

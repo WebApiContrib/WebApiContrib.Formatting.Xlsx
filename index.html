@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
-<title>xlsx for Web API (beta)</title>
+<title>WebApiContrib.Formatters.Xlsx</title>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/prism.css">
@@ -10,8 +10,8 @@
 <!--[if lt IE 10]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
 <header>
-	<h1><span class="xlsx">XLSX</span> for Web API <small>(beta)</small></h1>
-	<p>An Excel <code>Media&shy;Type&shy;Formatter</code> for ASP.NET Web API.</p>
+	<h1>WebApiContrib&#8203;.Formatters&#8203;<span class="xlsx">.Xlsx</span></h1>
+	<p>Make smart, beautiful Excel documents with ASP.NET Web API.</p>
 	<ul>
 		<li><a class="zip" href="https://github.com/jordangray/xlsx-for-web-api/archive/master.zip">Download <strong>ZIP File</strong></a>
 		<li><a class="github" href="https://github.com/jordangray/xlsx-for-web-api">View on <strong>GitHub</strong></a>
@@ -19,7 +19,9 @@
 </header>
 
 <main>
-	<p class="intro"><strong><span class="xlsx">XLSX</span> for Web API</strong> provides a smart, customisable Excel <code>Media&shy;Type&shy;Formatter</code> for ASP.NET Web API.</p>
+	<p class="intro">Generate <strong>formatted, customisable</strong> Excel documents straight from ASP.NET Web API.</p>
+
+	<p><strong>Note:</strong> this project was previously called &ldquo;XLSX for Web API&rdquo;. If you used it previously and wish to update, you will need to change your referenced DLL and imports from <code>XlsxForWebApi</code> to <code>WebApiContrib&#8203;.Formatters&#8203;.Xlsx</code>.</p>
 
 	<nav id="toc">
 		<h2>Contents</h2>
@@ -65,7 +67,7 @@
 
 	<ol>
 		<li>Add a reference to <kbd>EPPlus.dll</kbd> to your project—you can either <a href="http://epplus.codeplex.com/">download it from CodePlex</a> or <a href="http://www.nuget.org/packages/EPPlus/">grab the package on NuGet</a>.
-		<li>Add a reference to <kbd>Xlsx&shy;For&shy;Web&shy;Api&#8203;.dll</kbd> to your project.
+		<li>Add a reference to <kbd>WebApiContrib&#8203;.Formatters&#8203;.Xlsx&#8203;.dll</kbd> to your project.
 		<li>Add the <code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> to the formatter collection in your Web API configuration. This will look something like:
 			<pre><code class="language-csharp">config.Formatters.Add(new XlsxMediaTypeFormatter()); // Where config = System.Web.Http.HttpConfiguration.</code></pre>
 	</ol>
@@ -97,7 +99,7 @@
 		<dd><strong>Default <code>null</code>.</strong>
 		<dd>Can take an <code>Action&#8203;&lt;Office&shy;Open&shy;Xml&#8203;.Style&#8203;.Excel&shy;Style&gt;</code> that specifies visual formatting options (such as fonts and borders) for all cells.
 
-		<dt><code>cellStyle</code>
+		<dt><code>headerStyle</code>
 		<dd><strong>Default <code>null</code>.</strong>
 		<dd>Can take an <code>Action&#8203;&lt;Office&shy;Open&shy;Xml&#8203;.Style&#8203;.Excel&shy;Style&gt;</code> that specifies visual formatting options (such as fonts and borders) for only the column header cells.
 	</dl>
@@ -105,14 +107,18 @@
 	<h4 id="advanced-setup-example">Advanced setup example</h4>
 
 	<pre><code class="language-csharp">var formatter = new XlsxMediaTypeFormatter(
-	autoFit: true,
-	autoFilter: true,
-	freezeHeader: true,
-	headerHeight: 20f,
-	cellStyle: (ExcelStyle s) =>
-		s.WrapText = true,
-	headerStyle: (ExcelStyle s) =>
-		s.Border.Bottom.Style = ExcelBorderStyle.Double
+    autoFilter: true,
+    freezeHeader: true,
+    headerHeight: 25f,
+    cellStyle: (ExcelStyle s) => {
+        s.Font.SetFromFont(new Font("Segoe UI", 13f, FontStyle.Regular));
+    },
+    headerStyle: (ExcelStyle s) => {
+        s.Fill.PatternType = ExcelFillStyle.Solid;
+        s.Fill.BackgroundColor.SetColor(Color.FromArgb(0, 114, 51));
+        s.Font.Color.SetColor(Color.White);
+        s.Font.Size = 15f;
+    }
 );
 
 config.Formatters.Add(formatter);</code></pre>
@@ -153,7 +159,7 @@ public string Value { get; set; }</code></pre>
 
 	<p>By default, columns are ordered according to property order in the source, with properties in derived classes coming before those in base classes. However, sometimes you need more control over the order in which columns appear.</p>
 
-	<p>The <code>Order</code> parameter works similarly to <a href="http://james.newtonking.com/json/help/index.html?topic=html/JsonPropertyOrder.htm">JSON.NET's <code>Json&shy;Property&shy;Attribute&#8203;.Order</code></a>. Properties are serialised from lowest to highest <code>Order</code> parameter value, and properties with the same <code>Order</code> value are in source order. By default, all properties are assumed to have an <code>Order</code> value of -1.</p>
+	<p>The <code>Order</code> parameter works similarly to <a href="http://james.newtonking.com/json/help/index.html?topic=html/JsonPropertyOrder.htm">JSON.NET's <code>Json&shy;Property&shy;Attribute&#8203;.Order</code></a>, on which implementation it was partially based. Properties are serialised from lowest to highest <code>Order</code> parameter value, and properties with the same <code>Order</code> value are in source order. By default, all properties are assumed to have an <code>Order</code> value of -1.</p>
 
 	<p>Confusing? Here's an example showing all of these rules at work:</p>
 
@@ -192,7 +198,7 @@ public string Value5 { get; set; }</code></pre>
 
 <footer>
 	<h2>Credits and disclaimers</h2>
-	<p><strong><span class="xlsx">xlsx</span> for Web API</strong> is maintained by <a href="http://github.com/jordangray">Jordan Gray</a> (<a href="https://twitter.com/jordangray">@jordangray</a>). The ZIP and GitHub icons are from the <a href="http://modernuiicons.com/">Modern UI Icons</a> collection by <a href="http://templarian.com/">Austin Andrew</a> (<a href="https://twitter.com/Templarian">@templarian</a>).</p>
+	<p><strong>WebApiContrib&#8203;.Formatters&#8203;<span class="xlsx">.Xlsx</span></strong> is maintained by <a href="https://github.com/jordangray">Jordan Gray</a> (<a href="https://twitter.com/jordangray">@jordangray</a>) as part of the <a href="https://github.com/WebApiContrib">WebApiContrib project</a>. The ZIP and GitHub icons are from the <a href="http://modernuiicons.com/">Modern UI Icons</a> collection by <a href="http://templarian.com/">Austin Andrew</a> (<a href="https://twitter.com/Templarian">@templarian</a>).</p>
 	<p>Microsoft and Excel are either registered trademarks or trademarks of Microsoft Corporation in the United States and/or other countries. This project is not endorsed by Microsoft Corporation.</p>
 </footer>
 
@@ -207,6 +213,7 @@ ga('create', 'UA-47247606-1', 'jordangray.github.io');
 ga('send', 'pageview');
 </script>
 
+<!-- Table of contents -->
 <script>
 	var toc = document.getElementById('toc'),
 		header = toc.getElementsByTagName('h2')[0],
