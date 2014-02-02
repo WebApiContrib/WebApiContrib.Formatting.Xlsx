@@ -1,5 +1,5 @@
-XLSX for Web API
-================
+WebApiContrib.Formatting.Xlsx
+=============================
 
 **[Visit the project website][project-website] for more information and documentation.**
 
