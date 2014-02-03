@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
-<title>WebApiContrib.Formatters.Xlsx</title>
+<title>WebApiContrib.Formatting.Xlsx</title>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/prism.css">
@@ -10,7 +10,7 @@
 <!--[if lt IE 10]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
 <header>
-	<h1>WebApiContrib&#8203;.Formatters&#8203;<span class="xlsx">.Xlsx</span></h1>
+	<h1>WebApiContrib&#8203;.Formatting&#8203;<span class="xlsx">.Xlsx</span></h1>
 	<p>Make smart, beautiful Excel documents with ASP.NET Web API.</p>
 	<ul>
 		<li><a class="zip" href="https://github.com/jordangray/xlsx-for-web-api/archive/master.zip">Download <strong>ZIP File</strong></a>
@@ -21,7 +21,7 @@
 <main>
 	<p class="intro">Generate <strong>formatted, customisable</strong> Excel documents straight from ASP.NET Web API.</p>
 
-	<p><strong>Note:</strong> this project was previously called &ldquo;XLSX for Web API&rdquo;. If you used it previously and wish to update, you will need to change your referenced DLL and imports from <code>XlsxForWebApi</code> to <code>WebApiContrib&#8203;.Formatters&#8203;.Xlsx</code>.</p>
+	<p><strong>Note:</strong> this project was previously called &ldquo;XLSX for Web API&rdquo;. If you used it previously and wish to update, you will need to change your referenced DLL and imports from <code>XlsxForWebApi</code> to <code>WebApiContrib&#8203;.Formatting&#8203;.Xlsx</code>.</p>
 
 	<nav id="toc">
 		<h2>Contents</h2>
@@ -67,7 +67,7 @@
 
 	<ol>
 		<li>Add a reference to <kbd>EPPlus.dll</kbd> to your project—you can either <a href="http://epplus.codeplex.com/">download it from CodePlex</a> or <a href="http://www.nuget.org/packages/EPPlus/">grab the package on NuGet</a>.
-		<li>Add a reference to <kbd>WebApiContrib&#8203;.Formatters&#8203;.Xlsx&#8203;.dll</kbd> to your project.
+		<li>Add a reference to <kbd>WebApiContrib&#8203;.Formatting&#8203;.Xlsx&#8203;.dll</kbd> to your project.
 		<li>Add the <code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> to the formatter collection in your Web API configuration. This will look something like:
 			<pre><code class="language-csharp">config.Formatters.Add(new XlsxMediaTypeFormatter()); // Where config = System.Web.Http.HttpConfiguration.</code></pre>
 	</ol>
@@ -198,7 +198,7 @@ public string Value5 { get; set; }</code></pre>
 
 <footer>
 	<h2>Credits and disclaimers</h2>
-	<p><strong>WebApiContrib&#8203;.Formatters&#8203;<span class="xlsx">.Xlsx</span></strong> is maintained by <a href="https://github.com/jordangray">Jordan Gray</a> (<a href="https://twitter.com/jordangray">@jordangray</a>) as part of the <a href="https://github.com/WebApiContrib">WebApiContrib project</a>. The ZIP and GitHub icons are from the <a href="http://modernuiicons.com/">Modern UI Icons</a> collection by <a href="http://templarian.com/">Austin Andrew</a> (<a href="https://twitter.com/Templarian">@templarian</a>).</p>
+	<p><strong>WebApiContrib&#8203;.Formatting&#8203;<span class="xlsx">.Xlsx</span></strong> is maintained by <a href="https://github.com/jordangray">Jordan Gray</a> (<a href="https://twitter.com/jordangray">@jordangray</a>) as part of the <a href="https://github.com/WebApiContrib">WebApiContrib project</a>. The ZIP and GitHub icons are from the <a href="http://modernuiicons.com/">Modern UI Icons</a> collection by <a href="http://templarian.com/">Austin Andrew</a> (<a href="https://twitter.com/Templarian">@templarian</a>).</p>
 	<p>Microsoft and Excel are either registered trademarks or trademarks of Microsoft Corporation in the United States and/or other countries. This project is not endorsed by Microsoft Corporation.</p>
 </footer>
 
