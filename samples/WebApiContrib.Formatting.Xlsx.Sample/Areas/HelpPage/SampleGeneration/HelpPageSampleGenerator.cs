@@ -12,7 +12,6 @@ using System.Net.Http.Headers;
 using System.Web.Http.Description;
 using System.Xml.Linq;
 using Newtonsoft.Json;
-using FormattingEnum = Newtonsoft.Json.Formatting;
 
 namespace WebApiContrib.Formatting.Xlsx.Sample.Areas.HelpPage
 {
@@ -379,7 +378,7 @@ namespace WebApiContrib.Formatting.Xlsx.Sample.Areas.HelpPage
             try
             {
                 object parsedJson = JsonConvert.DeserializeObject(str);
-                return JsonConvert.SerializeObject(parsedJson, FormattingEnum.Indented);
+                return JsonConvert.SerializeObject(parsedJson, Formatting.Indented);
             }
             catch
             {
