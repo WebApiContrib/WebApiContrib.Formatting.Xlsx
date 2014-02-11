@@ -229,26 +229,17 @@ namespace WebApiContrib.Formatting.Xlsx
                         var info = fieldInfo[i];
 
                         // Boolean transformations.
-                        if (info.ExcelAttribute != null && cellValue.GetType() == typeof(bool))
-                        {
-                            if (info.ExcelAttribute.TrueValue != null && cellValue.Equals(true))
-                            {
-                                row.Add(info.ExcelAttribute.TrueValue);
-                                continue;
-                            }
-                            else if (info.ExcelAttribute.FalseValue != null && cellValue.Equals(false))
-                            {
-                                row.Add(info.ExcelAttribute.FalseValue);;
-                                continue;
-                            }
-                        }
-                        
-                        if (!string.IsNullOrWhiteSpace(info.FormatString) & string.IsNullOrEmpty(info.ExcelNumberFormat))
-                        {
+                        if (info.ExcelAttribute != null && info.ExcelAttribute.TrueValue != null && cellValue.Equals("True"))
+                            row.Add(info.ExcelAttribute.TrueValue);
+
+                        else if (info.ExcelAttribute != null && info.ExcelAttribute.FalseValue != null && cellValue.Equals("False"))
+                            row.Add(info.ExcelAttribute.FalseValue);
+
+                        else if (!string.IsNullOrWhiteSpace(info.FormatString) & string.IsNullOrEmpty(info.ExcelNumberFormat))
                             row.Add(string.Format(info.FormatString, cellValue));
-                        } else {
+
+                        else
                             row.Add(cellValue);
-                        }
                     }
 
                     AppendRow(row.ToArray(), worksheet, ref rowCount);
