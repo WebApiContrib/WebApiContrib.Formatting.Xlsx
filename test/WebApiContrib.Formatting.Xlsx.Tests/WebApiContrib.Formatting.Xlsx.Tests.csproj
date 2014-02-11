@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EPPlus">
-      <HintPath>..\packages\EPPlus.3.1.3.3\lib\net35\EPPlus.dll</HintPath>
+      <HintPath>..\..\packages\EPPlus.3.1.3.3\lib\net35\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net.Http" />
@@ -66,13 +66,13 @@
     <Compile Include="FormatterUtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\src\WebApiContrib.Formatting.Xlsx\WebApiContrib.Formatting.Xlsx.csproj">
       <Project>{b6a319b2-82a4-41ba-a895-4fc02a0d53ef}</Project>
       <Name>WebApiContrib.Formatting.Xlsx</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
