@@ -59,7 +59,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestData\BooleanValueTestItem.cs" />
+    <Compile Include="TestData\BooleanTestItem.cs" />
     <Compile Include="XlsxMediaTypeFormatterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\ComplexTestItem.cs" />
