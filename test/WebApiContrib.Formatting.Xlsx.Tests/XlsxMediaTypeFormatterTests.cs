@@ -117,6 +117,47 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         }
 
         [TestMethod]
+        public void WriteToStreamAsync_WithArrayOfBooleanTestItem_TrueOrFalseValueUsedAsAppropriate()
+        {
+            var data = new[] { new BooleanTestItem { Value1 = true,
+                                                     Value2 = true,
+                                                     Value3 = true,
+                                                     Value4 = true },
+
+                               new BooleanTestItem { Value1 = false,
+                                                     Value2 = false,
+                                                     Value3 = false,
+                                                     Value4 = false },
+            
+                               new BooleanTestItem { Value1 = true,
+                                                     Value2 = true,
+                                                     Value3 = null,
+                                                     Value4 = null } };
+
+            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+
+            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
+            Assert.AreEqual(4.0, sheet.Dimension.End.Row, "Worksheet should have four rows (including header column).");
+            Assert.AreEqual(4.0, sheet.Dimension.End.Column, "Worksheet should have four columns.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
+            Assert.AreEqual("Value3", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
+            Assert.AreEqual("Value4", sheet.GetValue<string>(1, 4), "Header in D1 is incorrect.");
+            Assert.AreEqual("True", sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
+            Assert.AreEqual("Yes", sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
+            Assert.AreEqual("True", sheet.GetValue<string>(2, 3), "Value in C2 is incorrect.");
+            Assert.AreEqual("Yes", sheet.GetValue<string>(2, 4), "Value in D2 is incorrect.");
+            Assert.AreEqual("False", sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
+            Assert.AreEqual("No", sheet.GetValue<string>(3, 2), "Value in B3 is incorrect.");
+            Assert.AreEqual("False", sheet.GetValue<string>(3, 3), "Value in C3 is incorrect.");
+            Assert.AreEqual("No", sheet.GetValue<string>(3, 4), "Value in D3 is incorrect.");
+            Assert.AreEqual("True", sheet.GetValue<string>(4, 1), "Value in A4 is incorrect.");
+            Assert.AreEqual("Yes", sheet.GetValue<string>(4, 2), "Value in B4 is incorrect.");
+            Assert.AreEqual(string.Empty, sheet.GetValue<string>(4, 3), "Value in C4 is incorrect.");
+            Assert.AreEqual(string.Empty, sheet.GetValue<string>(4, 4), "Value in D4 is incorrect.");
+        }
+
+        [TestMethod]
         public void WriteToStreamAsync_WithSimpleTestItem_WritesExcelDocumentToStream()
         {
             var data = new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" };

@@ -226,11 +226,20 @@ namespace WebApiContrib.Formatting.Xlsx
 
                     for (int i = 0; i <= fields.Count - 1; i++) {
                         var cellValue = GetFieldOrPropertyValue(dataObject, fields[i]);
-                        if (!string.IsNullOrWhiteSpace(fieldInfo[i].FormatString) & string.IsNullOrEmpty(fieldInfo[i].ExcelNumberFormat)) {
-                            row.Add(string.Format(fieldInfo[i].FormatString, cellValue));
-                        } else {
+                        var info = fieldInfo[i];
+
+                        // Boolean transformations.
+                        if (info.ExcelAttribute != null && info.ExcelAttribute.TrueValue != null && cellValue.Equals("True"))
+                            row.Add(info.ExcelAttribute.TrueValue);
+
+                        else if (info.ExcelAttribute != null && info.ExcelAttribute.FalseValue != null && cellValue.Equals("False"))
+                            row.Add(info.ExcelAttribute.FalseValue);
+
+                        else if (!string.IsNullOrWhiteSpace(info.FormatString) & string.IsNullOrEmpty(info.ExcelNumberFormat))
+                            row.Add(string.Format(info.FormatString, cellValue));
+
+                        else
                             row.Add(cellValue);
-                        }
                     }
 
                     AppendRow(row.ToArray(), worksheet, ref rowCount);

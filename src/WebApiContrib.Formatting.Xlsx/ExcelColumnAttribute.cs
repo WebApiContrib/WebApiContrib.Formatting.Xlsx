@@ -26,6 +26,16 @@ namespace WebApiContrib.Formatting.Xlsx
         public string Header { get; set; }
 
         /// <summary>
+        /// Value to use if this field is a boolean value and equals <c>true</c>.
+        /// </summary>
+        public string TrueValue { get; set; }
+
+        /// <summary>
+        /// Value to use if this field is a boolean value and equals <c>false</c>.
+        /// </summary>
+        public string FalseValue { get; set; }
+
+        /// <summary>
         /// Ignore this property when serializing to Excel.
         /// </summary>
         public bool Ignore { get; set; }
