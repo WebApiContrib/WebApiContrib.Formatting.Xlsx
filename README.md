@@ -1,6 +1,6 @@
-XLSX for Web API
-================
+WebApiContrib.Formatting.Xlsx
+=============================
 
-For more information and documentation, visit the [project page][xlsx-web-page].
+**[Visit the project website][project-website] for more information and documentation.**
 
-[xlsx-web-page]: http://jordangray.github.io/xlsx-for-web-api/
+[project-website]: http://webapicontrib.github.io/WebApiContrib.Formatting.Xlsx/
