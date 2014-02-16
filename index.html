@@ -40,6 +40,7 @@
 					<li><a href="#set-number-format">Set number format for data cells</a>
 					<li><a href="#ignore-a-column">Ignore a column</a>
 					<li><a href="#customise-display-order">Customise display order</a>
+					<li><a href="#change-boolean-property">Change boolean property output</a>
 				</ul>
 			<li><a href="#future-work">Future work</a>
 		</ul>
@@ -182,7 +183,15 @@ public string Value4 { get; set; }
 // Third, because it has an implicit Order of -1 and is the
 // second item with that Order value.
 public string Value5 { get; set; }</code></pre>
-  
+  	
+	<h3 id="change-boolean-property">Change boolean property output</h3>
+
+	<p>By default, boolean properties are serialised to either <samp>True</samp> or <samp>False</samp>. You can customise this behaviour on individual columns so that different values are output.</p>
+
+	<pre><code class="language-csharp">// Use "Yes" and "No" to represent the value of this property.
+[ExcelColumn(TrueValue = "Yes", FalseValue="No")]
+public bool Value { get; set; }</code></pre>
+	
 	<h2 id="future-work">Future work</h2>
 
 	<ul>
