@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
-using WebApiContrib.Formatting.Xlsx;
 
 namespace WebApiContrib.Formatting.Xlsx.Tests.TestData
 {

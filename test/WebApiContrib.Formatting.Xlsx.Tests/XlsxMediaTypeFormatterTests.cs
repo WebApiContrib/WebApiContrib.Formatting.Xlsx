@@ -1,5 +1,4 @@
-﻿using WebApiContrib.Formatting.Xlsx.Tests.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -9,11 +8,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.Serialization;
 using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Drawing;
+using WebApiContrib.Formatting.Xlsx.Tests.TestData;
 
 namespace WebApiContrib.Formatting.Xlsx.Tests
 {
@@ -114,6 +111,41 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             Assert.AreEqual(data[0].Value2, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
             Assert.AreEqual(data[1].Value1, sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
             Assert.AreEqual(data[1].Value2, sheet.GetValue<string>(3, 2), "Value in B3 is incorrect.");
+        }
+
+        [TestMethod]
+        public void WriteToStreamAsync_WithArrayOfFormatStringTestItem_ValuesFormattedAppropriately()
+        {
+            var tomorrow = DateTime.Today.AddDays(1);
+            var formattedDate = tomorrow.ToString("D");
+            
+            var data = new[] { new FormatStringTestItem { Value1 = tomorrow,
+                                                          Value2 = tomorrow,
+                                                          Value3 = tomorrow,
+                                                          Value4 = tomorrow },
+
+                               new FormatStringTestItem { Value1 = tomorrow,
+                                                          Value2 = null,
+                                                          Value3 = null,
+                                                          Value4 = tomorrow } };
+
+            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+
+            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
+            Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
+            Assert.AreEqual(4.0, sheet.Dimension.End.Column, "Worksheet should have four columns.");
+            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
+            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
+            Assert.AreEqual("Value3", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
+            Assert.AreEqual("Value4", sheet.GetValue<string>(1, 4), "Header in D1 is incorrect.");
+            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
+            Assert.AreEqual(formattedDate, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
+            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(2, 3), "Value in C2 is incorrect.");
+            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(2, 4), "Value in D2 is incorrect.");
+            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
+            Assert.AreEqual(string.Empty, sheet.GetValue<string>(3, 2), "Value in B3 is incorrect.");
+            Assert.AreEqual(string.Empty, sheet.GetValue<string>(3, 3), "Value in C3 is incorrect.");
+            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(3, 4), "Value in D3 is incorrect.");
         }
 
         [TestMethod]

@@ -1,12 +1,11 @@
 ﻿using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Security.Permissions;
 using System.Threading.Tasks;
 using System.Web.ModelBinding;
@@ -205,11 +204,13 @@ namespace WebApiContrib.Formatting.Xlsx
                     if (!fieldInfo.Contains(propertyName)) continue;
 
                     var field = fieldInfo[propertyName];
+                    var attribute = field.ExcelAttribute;
 
                     if (!field.IsExcelHeaderDefined)
                         field.Header = modelProp.DisplayName ?? propertyName;
-
-                    field.FormatString = modelProp.DisplayFormatString;
+                    
+                    if (attribute != null && attribute.UseDisplayFormatString)
+                        field.FormatString = modelProp.DisplayFormatString;
                 }
             }
             

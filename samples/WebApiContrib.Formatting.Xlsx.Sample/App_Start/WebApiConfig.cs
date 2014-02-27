@@ -1,8 +1,5 @@
 ﻿using OfficeOpenXml.Style;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Web.Http;
 
 namespace WebApiContrib.Formatting.Xlsx.Sample
@@ -13,7 +10,11 @@ namespace WebApiContrib.Formatting.Xlsx.Sample
         {
             // Web API configuration and services
 
+            // Remove all other formatters (not required, used here
+            // to force XlsxMediaTypeFormatter as default)
             config.Formatters.Clear();
+
+            // Set up the XlsxMediaTypeFormatter
             var formatter = new XlsxMediaTypeFormatter(
                 autoFilter: true,
                 freezeHeader: true,
@@ -29,6 +30,7 @@ namespace WebApiContrib.Formatting.Xlsx.Sample
                 }
             );
 
+            // Add XlsxMediaTypeFormatter to the collection
             config.Formatters.Add(formatter);
 
             // Web API routes

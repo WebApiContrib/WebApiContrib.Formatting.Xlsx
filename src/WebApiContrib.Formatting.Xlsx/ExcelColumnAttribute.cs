@@ -16,7 +16,8 @@ namespace WebApiContrib.Formatting.Xlsx
         /// <summary>
         /// Control the output of this property when serialized to Excel.
         /// </summary>
-        public ExcelColumnAttribute(string header) {
+        public ExcelColumnAttribute(string header) : this()
+        {
             Header = header;
         }
 
@@ -34,6 +35,11 @@ namespace WebApiContrib.Formatting.Xlsx
         /// Value to use if this field is a boolean value and equals <c>false</c>.
         /// </summary>
         public string FalseValue { get; set; }
+
+        /// <summary>
+        /// Whether to use the display format string set for this field.
+        /// </summary>
+        public bool UseDisplayFormatString { get; set; }
 
         /// <summary>
         /// Ignore this property when serializing to Excel.
