@@ -205,11 +205,13 @@ namespace WebApiContrib.Formatting.Xlsx
                     if (!fieldInfo.Contains(propertyName)) continue;
 
                     var field = fieldInfo[propertyName];
+                    var attribute = field.ExcelAttribute;
 
                     if (!field.IsExcelHeaderDefined)
                         field.Header = modelProp.DisplayName ?? propertyName;
-
-                    field.FormatString = modelProp.DisplayFormatString;
+                    
+                    if (attribute != null && attribute.UseDisplayFormatString)
+                        field.FormatString = modelProp.DisplayFormatString;
                 }
             }
             
