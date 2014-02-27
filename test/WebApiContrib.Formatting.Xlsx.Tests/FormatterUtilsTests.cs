@@ -1,9 +1,8 @@
-﻿using WebApiContrib.Formatting.Xlsx.Tests.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using WebApiContrib.Formatting.Xlsx.Tests.TestData;
 
 namespace WebApiContrib.Formatting.Xlsx.Tests
 {

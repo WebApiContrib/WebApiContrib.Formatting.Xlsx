@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Web.Http;
-using System.Linq;
-using WebApiContrib.Formatting.Xlsx.Sample.Models;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Web.Http;
+using WebApiContrib.Formatting.Xlsx.Sample.Models;
 
 namespace WebApiContrib.Formatting.Xlsx.Sample.Controllers
 {

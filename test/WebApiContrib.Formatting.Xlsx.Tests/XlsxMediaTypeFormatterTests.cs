@@ -1,5 +1,4 @@
-﻿using WebApiContrib.Formatting.Xlsx.Tests.TestData;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -9,11 +8,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.Serialization;
 using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Drawing;
+using WebApiContrib.Formatting.Xlsx.Tests.TestData;
 
 namespace WebApiContrib.Formatting.Xlsx.Tests
 {
