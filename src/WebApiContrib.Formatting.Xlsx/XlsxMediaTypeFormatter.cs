@@ -261,7 +261,7 @@ namespace WebApiContrib.Formatting.Xlsx
             var cells = worksheet.Cells[worksheet.Dimension.Address];
 
             // Add autofilter and fit to max column width (if requested).
-            cells.AutoFilter = AutoFilter;
+            if (AutoFilter) cells.AutoFilter = AutoFilter;
             if (AutoFit) cells.AutoFitColumns();
 
             // Set header row where specified.
