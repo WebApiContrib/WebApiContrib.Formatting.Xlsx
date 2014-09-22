@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("WebApiContrib")]
 [assembly: AssemblyProduct("WebApiContrib.Formatting.Xlsx")]
-[assembly: AssemblyCopyright("Copyright © WebApiContrib 2014")]
+[assembly: AssemblyCopyright("2014 Jordan Gray, WebApiContrib team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
