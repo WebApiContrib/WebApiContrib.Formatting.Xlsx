@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Jordan Gray</authors>
+    <owners>WebApiContrib Team</owners>
+    <licenseUrl>https://raw.githubusercontent.com/WebApiContrib/WebApiContrib.Formatting.Xlsx/master/LICENSE.txt</licenseUrl>
+    <projectUrl>http://webapicontrib.github.io/WebApiContrib.Formatting.Xlsx/</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/WebApiContrib/Inventory/master/assets/images/logo-200x200.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Generate formatted, customisable Excel documents straight from ASP.NET Web API.</description>
+    <releaseNotes>First NuGet release. See package documentation for features and GitHub project page for known issues.</releaseNotes>
+    <copyright>2014 Jordan Gray, WebApiContrib team</copyright>
+    <tags>webapi webapicontrib xlsx excel mediatypeformatter</tags>
+  </metadata>
+</package>

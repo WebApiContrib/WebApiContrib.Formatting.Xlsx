@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("WebApiContrib.Formatting.Xlsx")]
-[assembly: AssemblyDescription("MS Excel extensions and utilities for Web API projects.")]
+[assembly: AssemblyDescription("Generate formatted, customisable Excel documents straight from ASP.NET Web API.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("WebApiContrib")]
 [assembly: AssemblyProduct("WebApiContrib.Formatting.Xlsx")]
-[assembly: AssemblyCopyright("No rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © WebApiContrib 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
