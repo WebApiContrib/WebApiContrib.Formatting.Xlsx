@@ -29,6 +29,7 @@ Task NuGetBuild -depends Clean {
 }
 
 Task RunUnitTests -depends Build {
+    New-Item -ItemType Directory -Force -Path "$test_result_path"
     $test_arguments = @("/resultsFile:$test_result_file")
     $test_arguments += "/testcontainer:$test_dll"
 	
