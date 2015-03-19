@@ -66,7 +66,7 @@ namespace WebApiContrib.Formatting.Xlsx
         /// <param name="cellHeight">Height of each row of data.</param>
         /// <param name="cellStyle">An action method that modifies the worksheet cell style.</param>
         /// <param name="headerStyle">An action method that modifies the cell style of the first (header) row in the worksheet.</param>
-        public XlsxMediaTypeFormatter(bool autoFit = true, bool autoFilter = false, bool freezeHeader = false, double headerHeight = 0, Action<ExcelStyle> cellStyle = null, Action<ExcelStyle> headerStyle = null)
+        public XlsxMediaTypeFormatter(bool autoFit = true, bool autoFilter = false, bool freezeHeader = false, double? headerHeight = null, Action<ExcelStyle> cellStyle = null, Action<ExcelStyle> headerStyle = null)
         {
             SupportedMediaTypes.Clear();
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));

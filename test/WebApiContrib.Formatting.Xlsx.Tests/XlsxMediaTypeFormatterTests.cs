@@ -398,6 +398,20 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         }
 
         [TestMethod]
+        public void XlsxMediaTypeFormatter_WithDefaultHeaderHeight_DefaultsToSameHeightForAllCells()
+        {
+            var data = new[] { new SimpleTestItem { Value1 = "A1", Value2 = "B1" },
+                               new SimpleTestItem { Value1 = "A1", Value2 = "B2" }  };
+
+            var formatter = new XlsxMediaTypeFormatter();
+
+            var sheet = GetWorksheetFromStream(formatter, data);
+
+            Assert.AreNotEqual(sheet.Row(1).Height, 0d, "HeaderHeight should not be zero");
+            Assert.AreEqual(sheet.Row(1).Height, sheet.Row(2).Height, "HeaderHeight should be the same as other rows");
+        }
+
+        [TestMethod]
         public void WriteToStreamAsync_WithCellAndHeaderFormats_WritesFormattedExcelDocumentToStream()
         {
             var data = new[] { new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" },
