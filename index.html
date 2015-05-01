@@ -63,8 +63,8 @@
 
 	<h2 id="setting-it-up">Setting it up</h2>
 	<ol>
-		<li>Add a reference to <kbd>EPPlus.dll</kbd> to your project—you can either <a href="http://epplus.codeplex.com/">download it from CodePlex</a> or <a href="http://www.nuget.org/packages/EPPlus/">grab the package on NuGet</a>.
-		<li>Add a reference to <kbd>WebApiContrib&#8203;.Formatting&#8203;.Xlsx&#8203;.dll</kbd> to your project.
+		<li><a href="http://www.nuget.org/packages/WebApiContrib.Formatting.Xlsx">Grab WebApiContrib&#8203;.Formatting&#8203;<span class="xlsx">.Xlsx</span> from NuGet</a>:
+			<pre><code class="language-powershell">Install-Package WebApiContrib.Formatting.Xlsx</code></pre>
 		<li>Add the <code>Xlsx&shy;Media&shy;Type&shy;Formatter</code> to the formatter collection in your Web API configuration. This will look something like:
 			<pre><code class="language-csharp">config.Formatters.Add(new XlsxMediaTypeFormatter()); // Where config = System.Web.Http.HttpConfiguration.</code></pre>
 	</ol>
@@ -233,3 +233,4 @@ ga('send', 'pageview');
 
 <script src="prism/prism.js"></script>
 <script src="prism/prism.csharp.js"></script>
+<script src="prism/prism.powershell.js"></script>
