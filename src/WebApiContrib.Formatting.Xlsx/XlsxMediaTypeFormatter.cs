@@ -10,6 +10,8 @@ using System.Security.Permissions;
 using System.Threading.Tasks;
 using System.Web.ModelBinding;
 using util = WebApiContrib.Formatting.Xlsx.FormatterUtils;
+using WebApiContrib.Formatting.Xlsx.Attributes;
+using WebApiContrib.Formatting.Xlsx.Serialisation;
 
 namespace WebApiContrib.Formatting.Xlsx
 {

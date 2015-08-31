@@ -1,4 +1,6 @@
-﻿namespace WebApiContrib.Formatting.Xlsx
+﻿using WebApiContrib.Formatting.Xlsx.Attributes;
+
+namespace WebApiContrib.Formatting.Xlsx.Serialisation
 {
     public class ExcelFieldInfo
     {

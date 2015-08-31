@@ -1,4 +1,6 @@
-﻿namespace WebApiContrib.Formatting.Xlsx.Tests.TestData
+﻿using WebApiContrib.Formatting.Xlsx.Attributes;
+
+namespace WebApiContrib.Formatting.Xlsx.Tests.TestData
 {
     public class BooleanTestItem
     {

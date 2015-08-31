@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using WebApiContrib.Formatting.Xlsx.Attributes;
 
 namespace WebApiContrib.Formatting.Xlsx
 {
@@ -190,8 +191,8 @@ namespace WebApiContrib.Formatting.Xlsx
                 type.IsValueType ||
                 type.IsPrimitive ||
                 new Type[] {
-		            typeof(String),
-		            typeof(Decimal),
+		            typeof(string),
+		            typeof(decimal),
 		            typeof(DateTime),
 		            typeof(DateTimeOffset),
 		            typeof(TimeSpan),

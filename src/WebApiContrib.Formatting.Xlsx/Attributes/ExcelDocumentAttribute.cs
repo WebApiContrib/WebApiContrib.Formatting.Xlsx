@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebApiContrib.Formatting.Xlsx
+namespace WebApiContrib.Formatting.Xlsx.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class ExcelDocumentAttribute : Attribute

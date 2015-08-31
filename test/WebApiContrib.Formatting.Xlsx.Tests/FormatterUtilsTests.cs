@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebApiContrib.Formatting.Xlsx.Tests.TestData;
+using WebApiContrib.Formatting.Xlsx.Attributes;
 
 namespace WebApiContrib.Formatting.Xlsx.Tests
 {

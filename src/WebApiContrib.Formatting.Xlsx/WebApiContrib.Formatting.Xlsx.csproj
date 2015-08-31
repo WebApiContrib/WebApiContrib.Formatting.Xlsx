@@ -55,10 +55,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcelColumnAttribute.cs" />
-    <Compile Include="ExcelDocumentAttribute.cs" />
-    <Compile Include="ExcelFieldInfo.cs" />
-    <Compile Include="ExcelFieldInfoCollection.cs" />
+    <Compile Include="Attributes\ExcelColumnAttribute.cs" />
+    <Compile Include="Attributes\ExcelDocumentAttribute.cs" />
+    <Compile Include="Serialisation\DefaultXlsxSerialiser.cs" />
+    <Compile Include="Serialisation\ExcelFieldInfo.cs" />
+    <Compile Include="Serialisation\ExcelFieldInfoCollection.cs" />
+    <Compile Include="Serialisation\IXlsxSerialiser.cs" />
+    <Compile Include="Serialisation\SimpleTypeXlsxSerialiser.cs" />
+    <Compile Include="XlsxDocumentBuilder.cs" />
     <Compile Include="XlsxMediaTypeFormatter.cs" />
     <Compile Include="FormatterUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
