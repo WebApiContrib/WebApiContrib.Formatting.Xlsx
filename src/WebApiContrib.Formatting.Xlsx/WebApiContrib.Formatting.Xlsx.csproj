@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EPPlus, Version=3.1.3.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\EPPlus.3.1.3.3\lib\net35\EPPlus.dll</HintPath>
+    <Reference Include="EPPlus, Version=4.0.4.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EPPlus.4.0.4\lib\net20\EPPlus.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -58,6 +59,7 @@
     <Compile Include="Attributes\ExcelColumnAttribute.cs" />
     <Compile Include="Attributes\ExcelDocumentAttribute.cs" />
     <Compile Include="Serialisation\DefaultXlsxSerialiser.cs" />
+    <Compile Include="Serialisation\ExpandoSerialiser.cs" />
     <Compile Include="Serialisation\ExcelFieldInfo.cs" />
     <Compile Include="Serialisation\ExcelFieldInfoCollection.cs" />
     <Compile Include="Serialisation\IXlsxSerialiser.cs" />
@@ -68,7 +70,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />

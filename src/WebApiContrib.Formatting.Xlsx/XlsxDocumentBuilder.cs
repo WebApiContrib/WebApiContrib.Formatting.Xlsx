@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApiContrib.Formatting.Xlsx.Serialisation;
 
 namespace WebApiContrib.Formatting.Xlsx
 {
@@ -52,6 +53,13 @@ namespace WebApiContrib.Formatting.Xlsx
                 // Unary-based indexes should not mix with zero-based. :(
                 Worksheet.Cells[RowCount, i].Value = enumerable.ElementAt(i - 1);
             }
+        }
+
+        public void FormatColumn(int column, string format, bool skipHeaderRow = true)
+        {
+            var firstRow = skipHeaderRow ? 2 : 1;
+
+            Worksheet.Cells[firstRow, column, RowCount, column].Style.Numberformat.Format = format;
         }
 
         public static bool IsExcelSupportedType(object expression)

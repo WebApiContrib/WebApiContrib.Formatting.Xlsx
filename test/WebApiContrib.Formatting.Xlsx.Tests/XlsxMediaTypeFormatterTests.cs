@@ -3,6 +3,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -81,17 +82,11 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var data = new[] { new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" },
                                new SimpleTestItem { Value1 = "3,1", Value2 = "3,2" } }.ToList();
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
-            
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual(data[0].Value1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
-            Assert.AreEqual(data[0].Value2, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
-            Assert.AreEqual(data[1].Value1, sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
-            Assert.AreEqual(data[1].Value2, sheet.GetValue<string>(3, 2), "Value in B3 is incorrect.");
+            var expected = new[] { new object[] { "Value1",       "Value2"       },
+                                   new object[] { data[0].Value1, data[0].Value2 },
+                                   new object[] { data[1].Value1, data[1].Value2 }  };
+
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -100,17 +95,11 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var data = new[] { new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" },
                                new SimpleTestItem { Value1 = "3,1", Value2 = "3,2" }  };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
-
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual(data[0].Value1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
-            Assert.AreEqual(data[0].Value2, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
-            Assert.AreEqual(data[1].Value1, sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
-            Assert.AreEqual(data[1].Value2, sheet.GetValue<string>(3, 2), "Value in B3 is incorrect.");
+            var expected = new[] { new object[] { "Value1",       "Value2"       },
+                                   new object[] { data[0].Value1, data[0].Value2 },
+                                   new object[] { data[1].Value1, data[1].Value2 }  };
+            
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -118,6 +107,11 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var tomorrow = DateTime.Today.AddDays(1);
             var formattedDate = tomorrow.ToString("D");
+
+            // Let 1 Jan 1990 = day 1 and add 1 for each day since, counting 1990 as a leap year due to an Excel bug.
+            var excelDate = (tomorrow - new DateTime(1900, 1, 1)).TotalDays + 2;
+            var excelDateStr = excelDate.ToString();
+
             
             var data = new[] { new FormatStringTestItem { Value1 = tomorrow,
                                                           Value2 = tomorrow,
@@ -129,23 +123,11 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
                                                           Value3 = null,
                                                           Value4 = tomorrow } };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new[] { "Value1",     "Value2",      "Value3",     "Value4"     },
+                                   new[] { excelDateStr, formattedDate, excelDateStr, excelDateStr },
+                                   new[] { excelDateStr, string.Empty,  string.Empty, excelDateStr }  };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
-            Assert.AreEqual(4.0, sheet.Dimension.End.Column, "Worksheet should have four columns.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual("Value3", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
-            Assert.AreEqual("Value4", sheet.GetValue<string>(1, 4), "Header in D1 is incorrect.");
-            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
-            Assert.AreEqual(formattedDate, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
-            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(2, 3), "Value in C2 is incorrect.");
-            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(2, 4), "Value in D2 is incorrect.");
-            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
-            Assert.AreEqual(string.Empty, sheet.GetValue<string>(3, 2), "Value in B3 is incorrect.");
-            Assert.AreEqual(string.Empty, sheet.GetValue<string>(3, 3), "Value in C3 is incorrect.");
-            Assert.AreNotEqual(formattedDate, sheet.GetValue<string>(3, 4), "Value in D3 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -166,27 +148,12 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
                                                      Value3 = null,
                                                      Value4 = null } };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new[] { "Value1", "Value2", "Value3",     "Value4"     },
+                                   new[] { "True",   "Yes",    "True",       "Yes"        },
+                                   new[] { "False",  "No",     "False",      "No"         },
+                                   new[] { "True",   "Yes",    string.Empty, string.Empty }  };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(4.0, sheet.Dimension.End.Row, "Worksheet should have four rows (including header column).");
-            Assert.AreEqual(4.0, sheet.Dimension.End.Column, "Worksheet should have four columns.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual("Value3", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
-            Assert.AreEqual("Value4", sheet.GetValue<string>(1, 4), "Header in D1 is incorrect.");
-            Assert.AreEqual("True", sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
-            Assert.AreEqual("Yes", sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
-            Assert.AreEqual("True", sheet.GetValue<string>(2, 3), "Value in C2 is incorrect.");
-            Assert.AreEqual("Yes", sheet.GetValue<string>(2, 4), "Value in D2 is incorrect.");
-            Assert.AreEqual("False", sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
-            Assert.AreEqual("No", sheet.GetValue<string>(3, 2), "Value in B3 is incorrect.");
-            Assert.AreEqual("False", sheet.GetValue<string>(3, 3), "Value in C3 is incorrect.");
-            Assert.AreEqual("No", sheet.GetValue<string>(3, 4), "Value in D3 is incorrect.");
-            Assert.AreEqual("True", sheet.GetValue<string>(4, 1), "Value in A4 is incorrect.");
-            Assert.AreEqual("Yes", sheet.GetValue<string>(4, 2), "Value in B4 is incorrect.");
-            Assert.AreEqual(string.Empty, sheet.GetValue<string>(4, 3), "Value in C4 is incorrect.");
-            Assert.AreEqual(string.Empty, sheet.GetValue<string>(4, 4), "Value in D4 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -194,15 +161,10 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var data = new SimpleTestItem { Value1 = "2,1", Value2 = "2,2" };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new[] { "Value1",    "Value2"    },
+                                   new[] { data.Value1, data.Value2 }  };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have two rows (including header column).");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Column, "Worksheet should have two columns.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual(data.Value1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
-            Assert.AreEqual(data.Value2, sheet.GetValue<string>(2, 2), "Value in B2 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -215,23 +177,13 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
                                              Value5 = TestEnum.First,
                                              Value6 = "Ignored" };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new object[] { "Header 4",  "Value1",    "Header 5",             "Header 3",             "Value2"    },
+                                   new object[] { data.Value4, data.Value1, data.Value5.ToString(), data.Value3.ToString(), data.Value2 }  };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have two rows (including header column).");
-            Assert.AreEqual(5.0, sheet.Dimension.End.Column, "Worksheet should have five columns.");
-            Assert.AreEqual("Header 4", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual("Header 5", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
-            Assert.AreEqual("Header 3", sheet.GetValue<string>(1, 4), "Header in D1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 5), "Header in E1 is incorrect.");
-            Assert.AreEqual(data.Value4, sheet.GetValue<double>(2, 1), "Data in A2 is incorrect.");
+            var sheet = GenerateAndCompareWorksheet(data, expected);
+
             Assert.AreEqual("???.???", sheet.Cells[2, 1].Style.Numberformat.Format, "NumberFormat of A2 is incorrect.");
-            Assert.AreEqual(data.Value1, sheet.GetValue<string>(2, 2), "Data in B2 is incorrect.");
-            Assert.AreEqual(data.Value5.ToString(), sheet.GetValue<string>(2, 3), "Data in C2 is incorrect.");
-            Assert.AreEqual(data.Value3.ToString(), sheet.GetValue<string>(2, 4), "Data in D2 is incorrect.");
-            Assert.AreEqual(data.Value2, sheet.GetValue<DateTime>(2, 5), "Data in E2 is incorrect.");
-        }
+       }
 
         [TestMethod]
         public void WriteToStreamAsync_WithListOfComplexTestItem_WritesExcelDocumentToStream()
@@ -250,28 +202,15 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
                                                      Value5 = TestEnum.Second,
                                                      Value6 = "Also ignored" } }.ToList();
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows (including header column).");
-            Assert.AreEqual(5.0, sheet.Dimension.End.Column, "Worksheet should have five columns.");
-            Assert.AreEqual("Header 4", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("Value1", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual("Header 5", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
-            Assert.AreEqual("Header 3", sheet.GetValue<string>(1, 4), "Header in D1 is incorrect.");
-            Assert.AreEqual("Value2", sheet.GetValue<string>(1, 5), "Header in E1 is incorrect.");
-            Assert.AreEqual(data[0].Value4, sheet.GetValue<double>(2, 1), "Data in A2 is incorrect.");
+            var expected = new[] { new object[] { "Header 4",     "Value1",       "Header 5",                "Header 3",                "Value2"       },
+                                   new object[] { data[0].Value4, data[0].Value1, data[0].Value5.ToString(), data[0].Value3.ToString(), data[0].Value2 },
+                                   new object[] { data[1].Value4, data[1].Value1, data[1].Value5.ToString(), data[1].Value3.ToString(), data[1].Value2 }  };
+            
+            var sheet = GenerateAndCompareWorksheet(data, expected);
+
             Assert.AreEqual("???.???", sheet.Cells[2, 1].Style.Numberformat.Format, "NumberFormat of A2 is incorrect.");
-            Assert.AreEqual(data[0].Value1, sheet.GetValue<string>(2, 2), "Data in B2 is incorrect.");
-            Assert.AreEqual(data[0].Value5.ToString(), sheet.GetValue<string>(2, 3), "Data in C2 is incorrect.");
-            Assert.AreEqual(data[0].Value3.ToString(), sheet.GetValue<string>(2, 4), "Data in D2 is incorrect.");
-            Assert.AreEqual(data[0].Value2, sheet.GetValue<DateTime>(2, 5), "Data in E2 is incorrect.");
-            Assert.AreEqual(data[1].Value4, sheet.GetValue<double>(3, 1), "Data in A3 is incorrect.");
             Assert.AreEqual("???.???", sheet.Cells[3, 1].Style.Numberformat.Format, "NumberFormat of A3 is incorrect.");
-            Assert.AreEqual(data[1].Value1, sheet.GetValue<string>(3, 2), "Data in B3 is incorrect.");
-            Assert.AreEqual(data[1].Value5.ToString(), sheet.GetValue<string>(3, 3), "Data in C3 is incorrect.");
-            Assert.AreEqual(data[1].Value3.ToString(), sheet.GetValue<string>(3, 4), "Data in D3 is incorrect.");
-            Assert.AreEqual(data[1].Value2, sheet.GetValue<DateTime>(3, 5), "Data in E3 is incorrect.");
         }
 
         [TestMethod]
@@ -279,17 +218,10 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var data = new { prop1 = "val1", prop2 = 1.0, prop3 = DateTime.Today };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new object[] { "prop1",    "prop2",    "prop3"    },
+                                   new object[] { data.prop1, data.prop2, data.prop3 }  };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have two rows.");
-            Assert.AreEqual(3.0, sheet.Dimension.End.Column, "Worksheet should have three columns.");
-            Assert.AreEqual("prop1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("prop2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual("prop3", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
-            Assert.AreEqual(data.prop1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
-            Assert.AreEqual(data.prop2, sheet.GetValue<double>(2, 2), "Value in B2 is incorrect.");
-            Assert.AreEqual(data.prop3, sheet.GetValue<DateTime>(2, 3), "Value in C2 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -300,20 +232,11 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
                 new { prop1 = "val2", prop2 = 2.0, prop3 = DateTime.Today.AddDays(1) }
             };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
-
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(3.0, sheet.Dimension.End.Row, "Worksheet should have three rows.");
-            Assert.AreEqual(3.0, sheet.Dimension.End.Column, "Worksheet should have three columns.");
-            Assert.AreEqual("prop1", sheet.GetValue<string>(1, 1), "Header in A1 is incorrect.");
-            Assert.AreEqual("prop2", sheet.GetValue<string>(1, 2), "Header in B1 is incorrect.");
-            Assert.AreEqual("prop3", sheet.GetValue<string>(1, 3), "Header in C1 is incorrect.");
-            Assert.AreEqual(data[0].prop1, sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
-            Assert.AreEqual(data[0].prop2, sheet.GetValue<double>(2, 2), "Value in B2 is incorrect.");
-            Assert.AreEqual(data[0].prop3, sheet.GetValue<DateTime>(2, 3), "Value in C2 is incorrect.");
-            Assert.AreEqual(data[1].prop1, sheet.GetValue<string>(3, 1), "Value in A3 is incorrect.");
-            Assert.AreEqual(data[1].prop2, sheet.GetValue<double>(3, 2), "Value in B3 is incorrect.");
-            Assert.AreEqual(data[1].prop3, sheet.GetValue<DateTime>(3, 3), "Value in C3 is incorrect.");
+            var expected = new[] { new object[] { "prop1",       "prop2",       "prop3"       },
+                                   new object[] { data[0].prop1, data[0].prop2, data[0].prop3 },
+                                   new object[] { data[1].prop1, data[1].prop2, data[1].prop3 }  };
+            
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -321,12 +244,9 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var data = "Test";
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new[] { data } };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Row, "Worksheet should have one row.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Column, "Worksheet should have one column.");
-            Assert.AreEqual(data, sheet.GetValue<string>(1, 1), "Value in A1 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -334,13 +254,10 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var data = new[] { "1,1", "2,1" };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new[] { data[0] },
+                                   new[] { data[1] }  };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have two rows.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Column, "Worksheet should have one column.");
-            Assert.AreEqual(data[0], sheet.GetValue<string>(1, 1), "Value in A1 is incorrect.");
-            Assert.AreEqual(data[1], sheet.GetValue<string>(2, 1), "Value in A2 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -348,12 +265,9 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var data = 100;
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new[] { data } };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Row, "Worksheet should have one row.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Column, "Worksheet should have one column.");
-            Assert.AreEqual(data, sheet.GetValue<int>(1, 1), "Value in A1 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -361,13 +275,10 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var data = new[] { 100, 200 };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new[] { data[0] },
+                                   new[] { data[1] }  };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have one row.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Column, "Worksheet should have one column.");
-            Assert.AreEqual(data[0], sheet.GetValue<int>(1, 1), "Value in A1 is incorrect.");
-            Assert.AreEqual(data[1], sheet.GetValue<int>(2, 1), "Value in A2 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -375,12 +286,9 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var data = DateTime.Today;
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new object[] { data } };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Row, "Worksheet should have one row.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Column, "Worksheet should have one column.");
-            Assert.AreEqual(data, sheet.GetValue<DateTime>(1, 1), "Value in A1 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -388,13 +296,42 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var data = new[] { DateTime.Today, DateTime.Today.AddDays(1) };
 
-            var sheet = GetWorksheetFromStream(new XlsxMediaTypeFormatter(), data);
+            var expected = new[] { new[] { data[0] },
+                                   new[] { data[1] }  };
 
-            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
-            Assert.AreEqual(2.0, sheet.Dimension.End.Row, "Worksheet should have one row.");
-            Assert.AreEqual(1.0, sheet.Dimension.End.Column, "Worksheet should have one column.");
-            Assert.AreEqual(data[0], sheet.GetValue<DateTime>(1, 1), "Value in A1 is incorrect.");
-            Assert.AreEqual(data[1], sheet.GetValue<DateTime>(2, 1), "Value in A2 is incorrect.");
+            GenerateAndCompareWorksheet(data, expected);
+        }
+
+        [TestMethod]
+        public void WriteToStreamAsync_WithExpandoObject_WritesExcelDocumentToStream()
+        {
+            dynamic data = new ExpandoObject();
+
+            data.Value1 = "Test";
+            data.Value2 = 1;
+
+            var expected = new[] { new object[] { data.Value1, data.Value2 } };
+
+            GenerateAndCompareWorksheet(data, expected);
+        }
+
+        [TestMethod]
+        public void WriteToStreamAsync_WithArrayOfExpandoObject_WritesExcelDocumentToStream()
+        {
+            dynamic row1 = new ExpandoObject();
+            dynamic row2 = new ExpandoObject();
+
+            row1.Value1 = "Test";
+            row1.Value2 = 1;
+            row2.Value1 = true;
+            row2.Value2 = DateTime.Today;
+
+            var data = new[] { row1, row2 };
+
+            var expected = new[] { new object[] { data[0].Value1, data[0].Value2 },
+                                   new object[] { data[1].Value1, data[1].Value2 }  };
+
+            GenerateAndCompareWorksheet(data, expected);
         }
 
         [TestMethod]
@@ -520,6 +457,46 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var package = new ExcelPackage(ms);
             return package.Workbook.Worksheets[1];
 
+        }
+
+        public void CompareWorksheet<TExpected>(ExcelWorksheet sheet, TExpected[][] expected)
+        {
+            Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
+
+            Assert.AreEqual(expected.Length, sheet.Dimension.End.Row, "Wrong number of rows.");
+            Assert.AreEqual(expected[0].Length, sheet.Dimension.End.Column, "Wrong number of columns.");
+
+            for (var i = 0; i < expected.Length; i++)
+            {
+                for (var j = 0; j < expected[i].Length; j++)
+                {
+                    var value = expected[i][j];
+
+                    var method = typeof(ExcelWorksheet).GetMethods()
+                                                       .Where(m => m.Name == "GetValue")
+                                                       .First(m => m.ContainsGenericParameters);
+
+                    var type = typeof(TExpected) == typeof(object) ? value.GetType() : typeof(TExpected);
+
+                    var cellValue = method.MakeGenericMethod(type)
+                                          .Invoke(sheet, new object[] { i + 1, j + 1 });
+                    
+                    var column = (char) ('A' + j);
+                    var row = i + 1;
+                    var message = String.Format("Value in {0}{1} is incorrect.", column, row);
+
+                    Assert.AreEqual(value, cellValue, message);
+                }
+            }
+        }
+
+        public ExcelWorksheet GenerateAndCompareWorksheet<TItem, TExpected>(TItem data, TExpected[][] expected, XlsxMediaTypeFormatter formatter = null)
+        {
+            var sheet = GetWorksheetFromStream(formatter ?? new XlsxMediaTypeFormatter(), data);
+
+            CompareWorksheet(sheet, expected);
+
+            return sheet;
         }
         #endregion
     }

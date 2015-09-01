@@ -6,7 +6,8 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
     {
         bool IgnoreHeadersAndAttributes { get; }
 
-        bool CanSerialiseType(Type itemType);
+        bool CanSerialiseType(Type valueType, Type itemType);
+
         void Serialise(Type itemType, object value, XlsxDocumentBuilder document);
     }
 }

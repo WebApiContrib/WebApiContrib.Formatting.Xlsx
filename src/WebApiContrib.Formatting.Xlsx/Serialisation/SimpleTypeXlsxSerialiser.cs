@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Specialized;
 using util = WebApiContrib.Formatting.Xlsx.FormatterUtils;
 
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
@@ -11,7 +12,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
             get { return true; }
         }
 
-        public bool CanSerialiseType(Type itemType)
+        public bool CanSerialiseType(Type valueType, Type itemType)
         {
             return util.IsSimpleType(itemType);
         }
