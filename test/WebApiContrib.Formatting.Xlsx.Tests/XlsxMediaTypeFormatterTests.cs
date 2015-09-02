@@ -11,7 +11,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
+using System.Web;
+using WebApiContrib.Formatting.Xlsx.Serialisation;
 using WebApiContrib.Formatting.Xlsx.Tests.TestData;
+using WebApiContrib.Formatting.Xlsx.Utils;
+using System.Collections;
 
 namespace WebApiContrib.Formatting.Xlsx.Tests
 {
@@ -412,7 +416,75 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
 
             Assert.AreEqual(30f, sheet.Row(1).Height, "Row 1 should have height 30.");
         }
-        
+
+        [TestMethod]
+        public void XlsxMediaTypeFormatter_WithPerRequestResolver_ReturnsSpecifiedProperties()
+        {
+
+            var data = new[] { new ComplexTestItem { Value1 = "Item 1",
+                                                     Value2 = DateTime.Today,
+                                                     Value3 = true,
+                                                     Value4 = 100.1,
+                                                     Value5 = TestEnum.First,
+                                                     Value6 = "Ignored" },
+
+                               new ComplexTestItem { Value1 = "Item 2",
+                                                     Value2 = DateTime.Today.AddDays(1),
+                                                     Value3 = false,
+                                                     Value4 = 200.2,
+                                                     Value5 = TestEnum.Second,
+                                                     Value6 = "Also ignored" } }.ToList();
+
+
+            var expected = new[] { new object[] { "Header 4",     "Value1",       "Header 5"                },
+                                   new object[] { data[0].Value4, data[0].Value1, data[0].Value5.ToString() },
+                                   new object[] { data[1].Value4, data[1].Value1, data[1].Value5.ToString() }  };
+
+            var serialiseValues = new[] { "Value1", "Value4", "Value5" };
+
+            var formatter = new XlsxMediaTypeFormatter();
+            formatter.DefaultSerializer.Resolver = new PerRequestXlsxContractResolver();
+
+            HttpContextFactory.SetCurrentContext(new FakeHttpContext());
+            HttpContextFactory.Current.Items[PerRequestXlsxContractResolver.DEFAULT_KEY] = serialiseValues;
+
+            var sheet = GenerateAndCompareWorksheet(data, expected, formatter);
+        }
+
+        [TestMethod]
+        public void XlsxMediaTypeFormatter_WithPerRequestResolverCustomOrder_ReturnsSpecifiedProperties()
+        {
+
+            var data = new[] { new ComplexTestItem { Value1 = "Item 1",
+                                                     Value2 = DateTime.Today,
+                                                     Value3 = true,
+                                                     Value4 = 100.1,
+                                                     Value5 = TestEnum.First,
+                                                     Value6 = "Ignored" },
+
+                               new ComplexTestItem { Value1 = "Item 2",
+                                                     Value2 = DateTime.Today.AddDays(1),
+                                                     Value3 = false,
+                                                     Value4 = 200.2,
+                                                     Value5 = TestEnum.Second,
+                                                     Value6 = "Also ignored" } }.ToList();
+
+
+            var expected = new[] { new object[] { "Value1",       "Header 4",     "Header 5"                },
+                                   new object[] { data[0].Value1, data[0].Value4, data[0].Value5.ToString() },
+                                   new object[] { data[1].Value1, data[1].Value4, data[1].Value5.ToString() }  };
+
+            var serialiseValues = new[] { "Value1", "Value4", "Value5" };
+
+            var formatter = new XlsxMediaTypeFormatter();
+            formatter.DefaultSerializer.Resolver = new PerRequestXlsxContractResolver(useCustomOrder: true);
+
+            HttpContextFactory.SetCurrentContext(new FakeHttpContext());
+            HttpContextFactory.Current.Items[PerRequestXlsxContractResolver.DEFAULT_KEY] = serialiseValues;
+
+            var sheet = GenerateAndCompareWorksheet(data, expected, formatter);
+        }
+
         #region Fakes and test-related classes
         public class FakeContent : HttpContent
         {
@@ -434,6 +506,19 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             public override ChannelBinding GetChannelBinding(ChannelBindingKind kind)
             {
                 throw new NotImplementedException();
+            }
+        }
+
+        public class FakeHttpContext : HttpContextBase
+        {
+            private IDictionary _items = new Dictionary<string, object>();
+            
+            public override IDictionary Items
+            {
+                get
+                {
+                    return _items;
+                }
             }
         }
         #endregion
