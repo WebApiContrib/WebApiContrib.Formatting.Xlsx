@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Web.ModelBinding;
-using WebApiContrib.Formatting.Xlsx.Attributes;
 using util = WebApiContrib.Formatting.Xlsx.FormatterUtils;
 
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
@@ -13,6 +10,15 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
     /// </summary>
     public class DefaultXlsxSerialiser : IXlsxSerialiser
     {
+        public IXlsxContractResolver Resolver { get; set; }
+
+        public DefaultXlsxSerialiser() : this(new DefaultXlsxContractResolver()) { }
+
+        public DefaultXlsxSerialiser(IXlsxContractResolver resolver)
+        {
+            Resolver = resolver;
+        }
+
         public virtual bool IgnoreFormatting
         {
             get { return false; }
@@ -27,7 +33,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
         {
             var data = value as IEnumerable<object>;
             
-            var fieldInfo = GetFieldInfo(itemType, data);
+            var fieldInfo = Resolver.GetExcelFieldInfoCollection(itemType, data);
             var fields = fieldInfo.Keys.ToList();
 
             if (fields.Count == 0) return;
@@ -62,93 +68,6 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
                 if (!string.IsNullOrEmpty(fieldInfo[i - 1].ExcelNumberFormat))
                 {
                     document.FormatColumn(i, fieldInfo[i - 1].ExcelNumberFormat);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the <c>ExcelFieldInfo</c> for all members of a class.
-        /// </summary>
-        /// <param name="itemType">Type of item being serialised.</param>
-        /// <param name="data">The collection of values being serialised. (Not used, provided for use by derived
-        /// types.)</param>
-        protected virtual ExcelFieldInfoCollection GetFieldInfo(Type itemType, IEnumerable<object> data)
-        {
-            var fields = GetSerialisableMemberNames(itemType, data);
-            var properties = GetSerialisablePropertyInfo(itemType, data);
-
-            var fieldInfo = new ExcelFieldInfoCollection();
-
-            // Instantiate field names and fieldInfo lists with serialisable members.
-            foreach (var field in fields)
-            {
-                var propName = field;
-                var prop = properties.FirstOrDefault(p => p.Name == propName);
-
-                if (prop == null) continue;
-
-                fieldInfo.Add(new ExcelFieldInfo(field, util.GetAttribute<ExcelColumnAttribute>(prop)));
-            }
-
-            PopulateFieldInfoFromMetadata(fieldInfo, itemType, data);
-
-            return fieldInfo;
-        }
-
-        /// <summary>
-        /// Get a list of all serialisable members for a class.
-        /// </summary>
-        /// <param name="itemType">Type of item being serialised.</param>
-        /// <param name="data">The collection of values being serialised. (Not used, provided for use by derived
-        /// types.)</param>
-        protected virtual IEnumerable<string> GetSerialisableMemberNames(Type itemType, IEnumerable<object> data)
-        {
-            return util.GetMemberNames(itemType);
-        }
-
-        /// <summary>
-        /// Get <c>PropertyInfo</c> for all public properties with parameterless get methods in a class.
-        /// </summary>
-        /// <param name="itemType">Type of item being serialised.</param>
-        /// <param name="data">The collection of values being serialised. (Not used, provided for use by derived
-        /// types.)</param>
-        protected virtual IEnumerable<PropertyInfo> GetSerialisablePropertyInfo(Type itemType, IEnumerable<object> data)
-        {
-            return (from p in itemType.GetProperties()
-                    where p.CanRead & p.GetGetMethod().IsPublic & p.GetGetMethod().GetParameters().Length == 0
-                    select p).ToList();
-        }
-
-        /// <summary>
-        /// Populate missing or incomplete properties from model metadata.
-        /// </summary>
-        /// <param name="fieldInfo">The <c>ExcelFieldInfoCollection</c> to populate.</param>
-        /// <param name="itemType">The type of item whose metadata this is being populated from.</param>
-        /// <param name="data">The collection of values being serialised. (Not used, provided for use by derived
-        /// types.)</param>
-        protected virtual void PopulateFieldInfoFromMetadata(ExcelFieldInfoCollection fieldInfo,
-                                                          Type itemType,
-                                                          IEnumerable<object> data)
-        {
-            // Populate missing attribute information from metadata.
-            var metadata = ModelMetadataProviders.Current.GetMetadataForType(null, itemType);
-
-            if (metadata != null && metadata.Properties != null)
-            {
-                foreach (var modelProp in metadata.Properties)
-                {
-                    var propertyName = modelProp.PropertyName;
-
-                    if (!fieldInfo.Contains(propertyName)) continue;
-
-                    var field = fieldInfo[propertyName];
-                    var attribute = field.ExcelAttribute;
-
-                    if (!field.IsExcelHeaderDefined)
-                        field.Header = modelProp.DisplayName ?? propertyName;
-
-                    if (attribute != null && attribute.UseDisplayFormatString)
-                        field.FormatString = modelProp.DisplayFormatString;
                 }
             }
         }

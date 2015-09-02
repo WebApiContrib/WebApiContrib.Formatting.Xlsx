@@ -3,7 +3,7 @@
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
 {
     /// <summary>
-    /// Interface for building custom serialisation logic.
+    /// Exposes access to serialisation logic for complete customisation of serialised output.
     /// </summary>
     public interface IXlsxSerialiser
     {

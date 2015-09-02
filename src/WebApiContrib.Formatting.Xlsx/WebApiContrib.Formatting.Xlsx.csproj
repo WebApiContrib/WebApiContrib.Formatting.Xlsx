@@ -58,11 +58,12 @@
   <ItemGroup>
     <Compile Include="Attributes\ExcelColumnAttribute.cs" />
     <Compile Include="Attributes\ExcelDocumentAttribute.cs" />
-    <Compile Include="Serialisation\CustomisableSerialiser.cs" />
+    <Compile Include="Serialisation\DefaultContractResolver.cs" />
     <Compile Include="Serialisation\DefaultXlsxSerialiser.cs" />
     <Compile Include="Serialisation\ExpandoSerialiser.cs" />
     <Compile Include="Serialisation\ExcelFieldInfo.cs" />
     <Compile Include="Serialisation\ExcelFieldInfoCollection.cs" />
+    <Compile Include="Serialisation\IXlsxContractResolver.cs" />
     <Compile Include="Serialisation\IXlsxSerialiser.cs" />
     <Compile Include="Serialisation\SimpleTypeXlsxSerialiser.cs" />
     <Compile Include="XlsxDocumentBuilder.cs" />
