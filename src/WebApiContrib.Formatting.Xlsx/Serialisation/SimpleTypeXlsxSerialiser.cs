@@ -5,13 +5,16 @@ using util = WebApiContrib.Formatting.Xlsx.FormatterUtils;
 
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
 {
+    /// <summary>
+    /// Custom serialiser for primitives and other simple types.
+    /// </summary>
     public class SimpleTypeXlsxSerialiser : IXlsxSerialiser
     {
-        public bool IgnoreHeadersAndAttributes
+        public bool IgnoreFormatting
         {
             get { return true; }
         }
-
+        
         public bool CanSerialiseType(Type valueType, Type itemType)
         {
             return util.IsSimpleType(itemType);

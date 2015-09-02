@@ -55,7 +55,7 @@ namespace WebApiContrib.Formatting.Xlsx
         protected double? HeaderHeight { get; set; }
 
         /// <summary>
-        /// List of serialisers available.
+        /// Non-default serialisers to be used by this formatter instance.
         /// </summary>
         public List<IXlsxSerialiser> Serialisers { get; set; }
 
@@ -68,14 +68,21 @@ namespace WebApiContrib.Formatting.Xlsx
         /// <summary>
         /// Create a new ExcelMediaTypeFormatter.
         /// </summary>
-        /// <param name="autoFit">True if the formatter should autofit columns after writing the data. (Default true.)</param>
+        /// <param name="autoFit">True if the formatter should autofit columns after writing the data. (Default
+        /// true.)</param>
         /// <param name="autoFilter">True if an autofilter should be applied to the worksheet. (Default false.)</param>
         /// <param name="freezeHeader">True if the header row should be frozen. (Default false.)</param>
         /// <param name="headerHeight">Height of the header row.</param>
         /// <param name="cellHeight">Height of each row of data.</param>
         /// <param name="cellStyle">An action method that modifies the worksheet cell style.</param>
-        /// <param name="headerStyle">An action method that modifies the cell style of the first (header) row in the worksheet.</param>
-        public XlsxMediaTypeFormatter(bool autoFit = true, bool autoFilter = false, bool freezeHeader = false, double? headerHeight = null, Action<ExcelStyle> cellStyle = null, Action<ExcelStyle> headerStyle = null)
+        /// <param name="headerStyle">An action method that modifies the cell style of the first (header) row in the
+        /// worksheet.</param>
+        public XlsxMediaTypeFormatter(bool autoFit = true,
+                                      bool autoFilter = false,
+                                      bool freezeHeader = false,
+                                      double? headerHeight = null,
+                                      Action<ExcelStyle> cellStyle = null,
+                                      Action<ExcelStyle> headerStyle = null)
         {
             SupportedMediaTypes.Clear();
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
@@ -99,7 +106,9 @@ namespace WebApiContrib.Formatting.Xlsx
 
         #region Methods
 
-        public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
+        public override void SetDefaultContentHeaders(Type type,
+                                                      HttpContentHeaders headers,
+                                                      MediaTypeHeaderValue mediaType)
         {
             // Get the raw request URI.
             string rawUri = System.Web.HttpContext.Current.Request.RawUrl;
@@ -139,7 +148,11 @@ namespace WebApiContrib.Formatting.Xlsx
         }
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public override Task WriteToStreamAsync(Type type, object value, System.IO.Stream writeStream, System.Net.Http.HttpContent content, System.Net.TransportContext transportContext)
+        public override Task WriteToStreamAsync(Type type,
+                                                object value,
+                                                System.IO.Stream writeStream,
+                                                System.Net.Http.HttpContent content,
+                                                System.Net.TransportContext transportContext)
         {
             // Create a document builder.
             var document = new XlsxDocumentBuilder(writeStream);
@@ -161,8 +174,10 @@ namespace WebApiContrib.Formatting.Xlsx
                 value = new object[] { value };
             }
 
+            // Used if no other matching serialiser can be found.
             IXlsxSerialiser serialiser = DefaultSerializer;
 
+            // Determine if a more specific serialiser might apply.
             foreach (var s in Serialisers)
             {
                 if (s.CanSerialiseType(valueType, itemType))
@@ -174,9 +189,10 @@ namespace WebApiContrib.Formatting.Xlsx
 
             serialiser.Serialise(itemType, value, document);
 
+            // Only format spreadsheet if it has content.
             if (document.RowCount > 0)
             {
-                if (serialiser.IgnoreHeadersAndAttributes)
+                if (serialiser.IgnoreFormatting)
                 {
                     // Autofit cells if specified.
                     if (AutoFit) document.AutoFit();
@@ -187,6 +203,10 @@ namespace WebApiContrib.Formatting.Xlsx
             return document.WriteToStream();
         }
 
+        /// <summary>
+        /// Applies custom formatting to a document. (Used if matched serialiser supports formatting.)
+        /// </summary>
+        /// <param name="document">The <c>XlsxDocumentBuilder</c> wrapping the document to format.</param>
         private void FormatDocument(XlsxDocumentBuilder document)
         {
             // Header cell styles

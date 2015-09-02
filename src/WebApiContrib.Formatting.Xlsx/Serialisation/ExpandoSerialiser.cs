@@ -6,16 +6,22 @@ using System.Linq.Expressions;
 
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
 {
+    /// <summary>
+    /// Custom serialiser for <c>ExpandoObject</c>.
+    /// </summary>
     public class ExpandoSerialiser : IXlsxSerialiser
     {
-        public bool IgnoreHeadersAndAttributes
+        public bool IgnoreFormatting
         {
             get
             {
-                return true;
+                return false;
             }
         }
 
+        /// <summary>
+        /// Returns true if value or item type are, or inherit from, <c>ExpandoObject</c>.
+        /// </summary>
         public bool CanSerialiseType(Type valueType, Type itemType)
         {
             return valueType.IsAssignableFrom(typeof(ExpandoObject)) || itemType.IsAssignableFrom(typeof(ExpandoObject));
@@ -35,6 +41,9 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
             var members = GetDynamicMembers(first);
 
             if (members.Count() == 0) return;
+
+            // Add member names as headers.
+            document.AppendRow(members);
 
             foreach (var item in data)
             {

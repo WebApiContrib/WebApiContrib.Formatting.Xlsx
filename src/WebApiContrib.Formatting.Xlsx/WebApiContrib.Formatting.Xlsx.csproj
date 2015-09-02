@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Attributes\ExcelColumnAttribute.cs" />
     <Compile Include="Attributes\ExcelDocumentAttribute.cs" />
+    <Compile Include="Serialisation\CustomisableSerialiser.cs" />
     <Compile Include="Serialisation\DefaultXlsxSerialiser.cs" />
     <Compile Include="Serialisation\ExpandoSerialiser.cs" />
     <Compile Include="Serialisation\ExcelFieldInfo.cs" />

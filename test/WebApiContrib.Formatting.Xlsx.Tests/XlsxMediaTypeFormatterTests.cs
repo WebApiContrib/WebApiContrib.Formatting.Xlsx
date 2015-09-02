@@ -310,7 +310,8 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             data.Value1 = "Test";
             data.Value2 = 1;
 
-            var expected = new[] { new object[] { data.Value1, data.Value2 } };
+            var expected = new[] { new object[] { "Value1",    "Value2"    },
+                                   new object[] { data.Value1, data.Value2 }  };
 
             GenerateAndCompareWorksheet(data, expected);
         }
@@ -328,7 +329,8 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
 
             var data = new[] { row1, row2 };
 
-            var expected = new[] { new object[] { data[0].Value1, data[0].Value2 },
+            var expected = new[] { new object[] { "Value1",       "Value2"       },
+                                   new object[] { data[0].Value1, data[0].Value2 },
                                    new object[] { data[1].Value1, data[1].Value2 }  };
 
             GenerateAndCompareWorksheet(data, expected);
@@ -437,6 +439,34 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         #endregion
 
         #region Utilities
+        /// <summary>
+        /// Generate the serialised worksheet and ensure that it is formatted as expected.
+        /// </summary>
+        /// <typeparam name="TItem">Type of items to be serialised.</typeparam>
+        /// <typeparam name="TExpected">Type of items in expected results array, usually <c>object</c>.</typeparam>
+        /// <param name="data">Data to be serialised.</param>
+        /// <param name="expected">Expected format of the generated worksheet.</param>
+        /// <param name="formatter">Optional custom formatter instance to use for serialisation.</param>
+        /// <returns>The generated <c>ExcelWorksheet</c> containing the serialised data.</returns>
+        public ExcelWorksheet GenerateAndCompareWorksheet<TItem, TExpected>(TItem data,
+                                                                            TExpected[][] expected,
+                                                                            XlsxMediaTypeFormatter formatter = null)
+        {
+            var sheet = GetWorksheetFromStream(formatter ?? new XlsxMediaTypeFormatter(), data);
+
+            CompareWorksheet(sheet, expected);
+
+            return sheet;
+        }
+
+        /// <summary>
+        /// Generate a worksheet containing the specified data using the provided <c>XlsxMediaTypeFormatter</c>
+        /// instance.
+        /// </summary>
+        /// <typeparam name="TItem">Type of items to be serialised.</typeparam>
+        /// <param name="formatter">Formatter instance to use for serialisation.</param>
+        /// <param name="data">Data to be serialised.</param>
+        /// <returns></returns>
         public ExcelWorksheet GetWorksheetFromStream<TItem>(XlsxMediaTypeFormatter formatter, TItem data)
         {
             var ms = new MemoryStream();
@@ -459,6 +489,12 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
 
         }
 
+        /// <summary>
+        /// Ensure that the data in a generated worksheet is serialised as expected.
+        /// </summary>
+        /// <typeparam name="TExpected">Type of items in expected results array, usually <c>object</c>.</typeparam>
+        /// <param name="sheet">The generated <c>ExcelWorksheet</c> containing the serialised data.</param>
+        /// <param name="expected">Expected format of the generated worksheet.</param>
         public void CompareWorksheet<TExpected>(ExcelWorksheet sheet, TExpected[][] expected)
         {
             Assert.IsNotNull(sheet.Dimension, "Worksheet has no cells.");
@@ -480,23 +516,14 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
 
                     var cellValue = method.MakeGenericMethod(type)
                                           .Invoke(sheet, new object[] { i + 1, j + 1 });
-                    
-                    var column = (char) ('A' + j);
+
+                    var column = (char)('A' + j);
                     var row = i + 1;
                     var message = String.Format("Value in {0}{1} is incorrect.", column, row);
 
                     Assert.AreEqual(value, cellValue, message);
                 }
             }
-        }
-
-        public ExcelWorksheet GenerateAndCompareWorksheet<TItem, TExpected>(TItem data, TExpected[][] expected, XlsxMediaTypeFormatter formatter = null)
-        {
-            var sheet = GetWorksheetFromStream(formatter ?? new XlsxMediaTypeFormatter(), data);
-
-            CompareWorksheet(sheet, expected);
-
-            return sheet;
         }
         #endregion
     }

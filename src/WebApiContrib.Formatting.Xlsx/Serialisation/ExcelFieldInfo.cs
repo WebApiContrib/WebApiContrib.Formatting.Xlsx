@@ -2,6 +2,9 @@
 
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
 {
+    /// <summary>
+    /// Formatting information for an Excel column based on attribute values specified on a class.
+    /// </summary>
     public class ExcelFieldInfo
     {
         public string PropertyName { get; set; }
