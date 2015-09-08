@@ -40,36 +40,24 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         [TestMethod]
         public void CanWriteType_AnyType_ReturnsTrue()
         {
+            var types = new[] { // Simple types
+                                typeof(bool), typeof(byte), typeof(sbyte), typeof(char),
+                                typeof(DateTime), typeof(DateTimeOffset), typeof(decimal),
+                                typeof(float), typeof(Guid), typeof(int), typeof(uint),
+                                typeof(long), typeof(ulong), typeof(short), typeof(ushort),
+                                typeof(TimeSpan), typeof(string), typeof(TestEnum),
+
+                                // Complex types
+                                new { anonymous = true }.GetType(), typeof(Array),
+                                typeof(IEnumerable<>), typeof(object), typeof(SimpleTestItem) };
+
+
             var formatter = new XlsxMediaTypeFormatter();
 
-            // Simple types
-            Assert.IsTrue(formatter.CanWriteType(typeof(bool)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(byte)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(sbyte)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(char)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(DateTime)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(DateTimeOffset)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(decimal)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(double)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(float)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(Guid)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(int)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(uint)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(long)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(ulong)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(short)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(TimeSpan)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(ushort)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(string)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(TestEnum)));
-
-            // Complex types
-            var anonymous = new { prop = "val" };
-            Assert.IsTrue(formatter.CanWriteType(anonymous.GetType()));
-            Assert.IsTrue(formatter.CanWriteType(typeof(Array)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(IEnumerable<>)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(object)));
-            Assert.IsTrue(formatter.CanWriteType(typeof(SimpleTestItem)));
+            foreach (var type in types)
+            {
+                Assert.IsTrue(formatter.CanWriteType(type));
+            }
         }
 
         [TestMethod]
@@ -77,7 +65,7 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         {
             var formatter = new XlsxMediaTypeFormatter();
 
-            Assert.IsFalse (formatter.CanReadType(typeof(object)));
+            Assert.IsFalse(formatter.CanReadType(typeof(object)));
         }
 
         [TestMethod]
@@ -376,32 +364,15 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var sheet = GetWorksheetFromStream(formatter, data);
 
             Assert.IsTrue(sheet.Cells[1, 1].Style.Font.Bold, "Header in A1 should be bold.");
-            Assert.IsTrue(sheet.Cells[1, 2].Style.Font.Bold, "Header in B1 should be bold.");
-            Assert.IsTrue(sheet.Cells[1, 3].Style.Font.Bold, "Header in C1 should be bold.");
-            Assert.IsTrue(sheet.Cells[2, 1].Style.Font.Bold, "Value in A2 should be bold.");
-            Assert.IsTrue(sheet.Cells[2, 2].Style.Font.Bold, "Value in B2 should be bold.");
-            Assert.IsTrue(sheet.Cells[2, 3].Style.Font.Bold, "Value in C2 should be bold.");
-            Assert.IsTrue(sheet.Cells[3, 1].Style.Font.Bold, "Value in A3 should be bold.");
-            Assert.IsTrue(sheet.Cells[3, 2].Style.Font.Bold, "Value in B3 should be bold.");
             Assert.IsTrue(sheet.Cells[3, 3].Style.Font.Bold, "Value in C3 should be bold.");
             Assert.AreEqual(18f, sheet.Cells[1, 1].Style.Font.Size, "Header in A1 should be in size 18 font.");
-            Assert.AreEqual(18f, sheet.Cells[1, 2].Style.Font.Size, "Header in B1 should be in size 18 font.");
             Assert.AreEqual(18f, sheet.Cells[1, 3].Style.Font.Size, "Header in C1 should be in size 18 font.");
             Assert.AreEqual(15f, sheet.Cells[2, 1].Style.Font.Size, "Value in A2 should be in size 15 font.");
-            Assert.AreEqual(15f, sheet.Cells[2, 2].Style.Font.Size, "Value in B2 should be in size 15 font.");
-            Assert.AreEqual(15f, sheet.Cells[2, 3].Style.Font.Size, "Value in C2 should be in size 15 font.");
-            Assert.AreEqual(15f, sheet.Cells[3, 1].Style.Font.Size, "Value in A3 should be in size 15 font.");
-            Assert.AreEqual(15f, sheet.Cells[3, 2].Style.Font.Size, "Value in B3 should be in size 15 font.");
             Assert.AreEqual(15f, sheet.Cells[3, 3].Style.Font.Size, "Value in C3 should be in size 15 font.");
             Assert.AreEqual(ExcelBorderStyle.Thick, sheet.Cells[1, 1].Style.Border.Bottom.Style, "Header in A1 should have a thick border.");
-            Assert.AreEqual(ExcelBorderStyle.Thick, sheet.Cells[1, 2].Style.Border.Bottom.Style, "Header in B1 should have a thick border.");
             Assert.AreEqual(ExcelBorderStyle.Thick, sheet.Cells[1, 3].Style.Border.Bottom.Style, "Header in C1 should have a thick border.");
-            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[2, 1].Style.Border.Bottom.Style, "Value in A2 should NOT have a thick border.");
-            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[2, 2].Style.Border.Bottom.Style, "Value in B2 should NOT have a thick border.");
-            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[2, 3].Style.Border.Bottom.Style, "Value in C2 should NOT have a thick border.");
-            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[3, 1].Style.Border.Bottom.Style, "Value in A3 should NOT have a thick border.");
-            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[3, 2].Style.Border.Bottom.Style, "Value in B3 should NOT have a thick border.");
-            Assert.AreNotEqual(ExcelBorderStyle.Thick, sheet.Cells[3, 3].Style.Border.Bottom.Style, "Value in C3 should NOT have a thick border.");
+            Assert.AreEqual(ExcelBorderStyle.None, sheet.Cells[2, 1].Style.Border.Bottom.Style, "Value in A2 should have no border.");
+            Assert.AreEqual(ExcelBorderStyle.None, sheet.Cells[3, 3].Style.Border.Bottom.Style, "Value in C3 should have no border.");
         }
 
         [TestMethod]
