@@ -1,4 +1,5 @@
 ﻿using System;
+using WebApiContrib.Formatting.Xlsx.Attributes;
 
 namespace WebApiContrib.Formatting.Xlsx.Tests.TestData
 {

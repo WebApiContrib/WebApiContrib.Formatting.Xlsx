@@ -1,4 +1,4 @@
-﻿using WebApiContrib.Formatting.Xlsx;
+﻿using WebApiContrib.Formatting.Xlsx.Attributes;
 
 namespace WebApiContrib.Formatting.Xlsx.Sample.Models
 {
