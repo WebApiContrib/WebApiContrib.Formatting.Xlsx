@@ -5,7 +5,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
     /// <summary>
     /// Formatting information for an Excel column based on attribute values specified on a class.
     /// </summary>
-    public class ExcelFieldInfo
+    public class ExcelColumnInfo
     {
         public string PropertyName { get; set; }
         public ExcelColumnAttribute ExcelAttribute { get; set; }
@@ -22,7 +22,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
             get { return ExcelAttribute != null && ExcelAttribute.Header != null; }
         }
 
-        public ExcelFieldInfo(string propertyName, ExcelColumnAttribute excelAttribute = null, string formatString = null)
+        public ExcelColumnInfo(string propertyName, ExcelColumnAttribute excelAttribute = null, string formatString = null)
         {
             PropertyName = propertyName;
             ExcelAttribute = excelAttribute;

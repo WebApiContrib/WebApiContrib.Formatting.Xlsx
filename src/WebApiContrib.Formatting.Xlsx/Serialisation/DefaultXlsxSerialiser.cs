@@ -10,11 +10,14 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
     /// </summary>
     public class DefaultXlsxSerialiser : IXlsxSerialiser
     {
-        public IXlsxContractResolver Resolver { get; set; }
+        /// <summary>
+        /// Default resolver determining which columns are generated from a type and how they are formatted.
+        /// </summary>
+        public IColumnResolver Resolver { get; set; }
 
-        public DefaultXlsxSerialiser() : this(new DefaultXlsxContractResolver()) { }
+        public DefaultXlsxSerialiser() : this(new DefaultColumnResolver()) { }
 
-        public DefaultXlsxSerialiser(IXlsxContractResolver resolver)
+        public DefaultXlsxSerialiser(IColumnResolver resolver)
         {
             Resolver = resolver;
         }
@@ -32,15 +35,14 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
         public virtual void Serialise(Type itemType, object value, XlsxDocumentBuilder document)
         {
             var data = value as IEnumerable<object>;
-            
-            var fieldInfo = Resolver.GetExcelFieldInfoCollection(itemType, data);
-            var fields = fieldInfo.Keys.ToList();
+            var columnInfo = Resolver.GetExcelColumnInfo(itemType, data);
 
-            if (fields.Count == 0) return;
+            if (columnInfo.Count == 0) return;
 
+            var columns = columnInfo.Keys.ToList();
 
             // Add header row
-            document.AppendRow((from f in fieldInfo select f.Header).ToList());
+            document.AppendRow((from col in columnInfo select col.Header).ToList());
 
             // Output each row of data
             if (data != null && data.FirstOrDefault() != null)
@@ -49,10 +51,10 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
                 {
                     var row = new List<object>();
 
-                    for (int i = 0; i <= fields.Count - 1; i++)
+                    for (int i = 0; i <= columns.Count - 1; i++)
                     {
-                        var cellValue = GetFieldOrPropertyValue(dataObject, fields[i]);
-                        var info = fieldInfo[i];
+                        var cellValue = GetFieldOrPropertyValue(dataObject, columns[i]);
+                        var info = columnInfo[i];
 
                         row.Add(FormatCellValue(cellValue, info));
                     }
@@ -63,11 +65,11 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
             
 
             // Enforce any attributes on columns.
-            for (int i = 1; i <= fields.Count; i++)
+            for (int i = 1; i <= columns.Count; i++)
             {
-                if (!string.IsNullOrEmpty(fieldInfo[i - 1].ExcelNumberFormat))
+                if (!string.IsNullOrEmpty(columnInfo[i - 1].ExcelNumberFormat))
                 {
-                    document.FormatColumn(i, fieldInfo[i - 1].ExcelNumberFormat);
+                    document.FormatColumn(i, columnInfo[i - 1].ExcelNumberFormat);
                 }
             }
         }
@@ -77,7 +79,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
         /// </summary>
         /// <param name="cellValue">The value about to be serialised.</param>
         /// <param name="info">Formatting information for this cell based on attributes.</param>
-        protected virtual object FormatCellValue(object cellValue, ExcelFieldInfo info)
+        protected virtual object FormatCellValue(object cellValue, ExcelColumnInfo info)
         {
             // Boolean transformations.
             if (info.ExcelAttribute != null && info.ExcelAttribute.TrueValue != null && cellValue.Equals("True"))

@@ -4,7 +4,10 @@ using System.Linq;
 
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
 {
-    public class ExcelFieldInfoCollection : KeyedCollection<string, ExcelFieldInfo>
+    /// <summary>
+    /// A collection of column information for an Excel document, keyed by field/property name.
+    /// </summary>
+    public class ExcelColumnInfoCollection : KeyedCollection<string, ExcelColumnInfo>
     {
         public ICollection<string> Keys
         {
@@ -21,7 +24,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
             }
         }
 
-        protected override string GetKeyForItem(ExcelFieldInfo item)
+        protected override string GetKeyForItem(ExcelColumnInfo item)
         {
             return item.PropertyName;
         }

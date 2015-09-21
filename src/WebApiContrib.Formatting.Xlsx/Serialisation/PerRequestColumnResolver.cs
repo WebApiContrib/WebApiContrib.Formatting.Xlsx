@@ -7,7 +7,11 @@ using WebApiContrib.Formatting.Xlsx.Utils;
 
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
 {
-    public class PerRequestXlsxContractResolver : DefaultXlsxContractResolver
+    /// <summary>
+    /// Resolves the properties whitelisted by name in an item (default <c>XlsxSerialisableProperties</c>) of the
+    /// current request's <c>HttpContext</c>, optionally respecting the whitelist order.
+    /// </summary>
+    public class PerRequestColumnResolver : DefaultColumnResolver
     {
         public const string DEFAULT_KEY = "XlsxSerialisableProperties";
 
@@ -21,7 +25,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
         /// </summary>
         public bool UseCustomOrder { get; set; }
 
-        public PerRequestXlsxContractResolver(string httpContextItemKey = DEFAULT_KEY, bool useCustomOrder = false)
+        public PerRequestColumnResolver(string httpContextItemKey = DEFAULT_KEY, bool useCustomOrder = false)
         {
             HttpContextItemKey = httpContextItemKey;
             UseCustomOrder = useCustomOrder;

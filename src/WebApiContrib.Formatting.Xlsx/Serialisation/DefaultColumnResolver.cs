@@ -8,21 +8,24 @@ using util = WebApiContrib.Formatting.Xlsx.FormatterUtils;
 
 namespace WebApiContrib.Formatting.Xlsx.Serialisation
 {
-    public class DefaultXlsxContractResolver : IXlsxContractResolver
+    /// <summary>
+    /// Resolves all public, parameterless properties of an object, respecting any <c>ExcelColumnAttribute</c>
+    /// values.
+    /// </summary>
+    public class DefaultColumnResolver : IColumnResolver
     {
-
         /// <summary>
-        /// Get the <c>ExcelFieldInfo</c> for all members of a class.
+        /// Get the <c>ExcelColumnInfo</c> for all members of a class.
         /// </summary>
         /// <param name="itemType">Type of item being serialised.</param>
         /// <param name="data">The collection of values being serialised. (Not used, provided for use by derived
         /// types.)</param>
-        public virtual ExcelFieldInfoCollection GetExcelFieldInfoCollection(Type itemType, IEnumerable<object> data)
+        public virtual ExcelColumnInfoCollection GetExcelColumnInfo(Type itemType, IEnumerable<object> data)
         {
             var fields = GetSerialisableMemberNames(itemType, data);
             var properties = GetSerialisablePropertyInfo(itemType, data);
 
-            var fieldInfo = new ExcelFieldInfoCollection();
+            var fieldInfo = new ExcelColumnInfoCollection();
 
             // Instantiate field names and fieldInfo lists with serialisable members.
             foreach (var field in fields)
@@ -32,7 +35,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
 
                 if (prop == null) continue;
 
-                fieldInfo.Add(new ExcelFieldInfo(field, util.GetAttribute<ExcelColumnAttribute>(prop)));
+                fieldInfo.Add(new ExcelColumnInfo(field, util.GetAttribute<ExcelColumnAttribute>(prop)));
             }
 
             PopulateFieldInfoFromMetadata(fieldInfo, itemType, data);
@@ -67,11 +70,11 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
         /// <summary>
         /// Populate missing or incomplete properties from model metadata.
         /// </summary>
-        /// <param name="fieldInfo">The <c>ExcelFieldInfoCollection</c> to populate.</param>
+        /// <param name="fieldInfo">The <c>ExcelColumnInfoCollection</c> to populate.</param>
         /// <param name="itemType">The type of item whose metadata this is being populated from.</param>
         /// <param name="data">The collection of values being serialised. (Not used, provided for use by derived
         /// types.)</param>
-        protected virtual void PopulateFieldInfoFromMetadata(ExcelFieldInfoCollection fieldInfo,
+        protected virtual void PopulateFieldInfoFromMetadata(ExcelColumnInfoCollection fieldInfo,
                                                              Type itemType,
                                                              IEnumerable<object> data)
         {

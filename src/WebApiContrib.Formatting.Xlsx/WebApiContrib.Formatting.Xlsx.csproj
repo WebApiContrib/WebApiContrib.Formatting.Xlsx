@@ -58,14 +58,14 @@
   <ItemGroup>
     <Compile Include="Attributes\ExcelColumnAttribute.cs" />
     <Compile Include="Attributes\ExcelDocumentAttribute.cs" />
-    <Compile Include="Serialisation\DefaultXlsxContractResolver.cs" />
+    <Compile Include="Serialisation\DefaultColumnResolver.cs" />
     <Compile Include="Serialisation\DefaultXlsxSerialiser.cs" />
     <Compile Include="Serialisation\ExpandoSerialiser.cs" />
-    <Compile Include="Serialisation\ExcelFieldInfo.cs" />
-    <Compile Include="Serialisation\ExcelFieldInfoCollection.cs" />
-    <Compile Include="Serialisation\IXlsxContractResolver.cs" />
+    <Compile Include="Serialisation\ExcelColumnInfo.cs" />
+    <Compile Include="Serialisation\ExcelColumnInfoCollection.cs" />
+    <Compile Include="Serialisation\IColumnResolver.cs" />
     <Compile Include="Serialisation\IXlsxSerialiser.cs" />
-    <Compile Include="Serialisation\PerRequestXlsxContractResolver.cs" />
+    <Compile Include="Serialisation\PerRequestColumnResolver.cs" />
     <Compile Include="Serialisation\SimpleTypeXlsxSerialiser.cs" />
     <Compile Include="Utils\HttpContextFactory.cs" />
     <Compile Include="XlsxDocumentBuilder.cs" />

@@ -389,7 +389,7 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         }
 
         [TestMethod]
-        public void XlsxMediaTypeFormatter_WithPerRequestResolver_ReturnsSpecifiedProperties()
+        public void XlsxMediaTypeFormatter_WithPerRequestColumnResolver_ReturnsSpecifiedProperties()
         {
 
             var data = new[] { new ComplexTestItem { Value1 = "Item 1",
@@ -414,16 +414,16 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var serialiseValues = new[] { "Value1", "Value4", "Value5" };
 
             var formatter = new XlsxMediaTypeFormatter();
-            formatter.DefaultSerializer.Resolver = new PerRequestXlsxContractResolver();
+            formatter.DefaultSerializer.Resolver = new PerRequestColumnResolver();
 
             HttpContextFactory.SetCurrentContext(new FakeHttpContext());
-            HttpContextFactory.Current.Items[PerRequestXlsxContractResolver.DEFAULT_KEY] = serialiseValues;
+            HttpContextFactory.Current.Items[PerRequestColumnResolver.DEFAULT_KEY] = serialiseValues;
 
             var sheet = GenerateAndCompareWorksheet(data, expected, formatter);
         }
 
         [TestMethod]
-        public void XlsxMediaTypeFormatter_WithPerRequestResolverCustomOrder_ReturnsSpecifiedProperties()
+        public void XlsxMediaTypeFormatter_WithPerRequestColumnResolverCustomOrder_ReturnsSpecifiedProperties()
         {
 
             var data = new[] { new ComplexTestItem { Value1 = "Item 1",
@@ -448,10 +448,10 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var serialiseValues = new[] { "Value1", "Value4", "Value5" };
 
             var formatter = new XlsxMediaTypeFormatter();
-            formatter.DefaultSerializer.Resolver = new PerRequestXlsxContractResolver(useCustomOrder: true);
+            formatter.DefaultSerializer.Resolver = new PerRequestColumnResolver(useCustomOrder: true);
 
             HttpContextFactory.SetCurrentContext(new FakeHttpContext());
-            HttpContextFactory.Current.Items[PerRequestXlsxContractResolver.DEFAULT_KEY] = serialiseValues;
+            HttpContextFactory.Current.Items[PerRequestColumnResolver.DEFAULT_KEY] = serialiseValues;
 
             var sheet = GenerateAndCompareWorksheet(data, expected, formatter);
         }
