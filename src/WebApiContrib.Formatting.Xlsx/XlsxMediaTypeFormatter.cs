@@ -96,31 +96,35 @@ namespace WebApiContrib.Formatting.Xlsx
                 rawUri = rawUri.Substring(0, queryStringIndex);
             }
 
-            string fileName;
+	        if (headers.ContentDisposition == null)
+	        {
 
-            // Look for ExcelDocumentAttribute on class.
-            var itemType = util.GetEnumerableItemType(type);
-            var excelDocumentAttribute = util.GetAttribute<ExcelDocumentAttribute>(itemType ?? type);
+		        string fileName;
 
-            if (excelDocumentAttribute != null && !string.IsNullOrEmpty(excelDocumentAttribute.FileName))
-            {
-                // If attribute exists with file name defined, use that.
-                fileName = excelDocumentAttribute.FileName;
-            }
-            else
-            {
-                // Otherwise, use either the URL file name component or just "data".
-                fileName = System.Web.VirtualPathUtility.GetFileName(rawUri) ?? "data";
-            }
+		        // Look for ExcelDocumentAttribute on class.
+		        var itemType = util.GetEnumerableItemType(type);
+		        var excelDocumentAttribute = util.GetAttribute<ExcelDocumentAttribute>(itemType ?? type);
 
-            // Add XLSX extension if not present.
-            if (!fileName.EndsWith("xlsx", StringComparison.CurrentCultureIgnoreCase)) fileName += ".xlsx";
+		        if (excelDocumentAttribute != null && !string.IsNullOrEmpty(excelDocumentAttribute.FileName))
+		        {
+			        // If attribute exists with file name defined, use that.
+			        fileName = excelDocumentAttribute.FileName;
+		        }
+		        else
+		        {
+			        // Otherwise, use either the URL file name component or just "data".
+			        fileName = System.Web.VirtualPathUtility.GetFileName(rawUri) ?? "data";
+		        }
 
-            // Set content disposition to use this file name.
-            headers.ContentDisposition = new ContentDispositionHeaderValue("inline")
-                                             { FileName = fileName };
+		        // Add XLSX extension if not present.
+		        if (!fileName.EndsWith("xlsx", StringComparison.CurrentCultureIgnoreCase)) fileName += ".xlsx";
 
-            base.SetDefaultContentHeaders(type, headers, mediaType);
+		        // Set content disposition to use this file name.
+		        headers.ContentDisposition = new ContentDispositionHeaderValue("inline")
+		        {FileName = fileName};
+	        }
+
+	        base.SetDefaultContentHeaders(type, headers, mediaType);
         }
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
