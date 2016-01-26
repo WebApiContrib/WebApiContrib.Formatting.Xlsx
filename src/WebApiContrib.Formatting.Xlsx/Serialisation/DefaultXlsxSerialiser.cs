@@ -104,7 +104,11 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
         {
             var rowValue = util.GetFieldOrPropertyValue(rowObject, name);
 
-            if (IsExcelSupportedType(rowValue)) return rowValue;
+            if (rowValue is DateTimeOffset)
+                return ConvertFromDateTimeOffset((DateTimeOffset)rowValue);
+
+            else if (IsExcelSupportedType(rowValue))
+                return rowValue;
 
             return rowValue == null || DBNull.Value.Equals(rowValue)
                 ? string.Empty
@@ -127,5 +131,15 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
                 || expression is DateTime;
         }
 
+        // Taken from http://msdn.microsoft.com/en-us/library/bb546101.aspx
+        private static DateTime ConvertFromDateTimeOffset(DateTimeOffset dateTime)
+        {
+            if (dateTime.Offset.Equals(TimeSpan.Zero))
+                return dateTime.UtcDateTime;
+            else if (dateTime.Offset.Equals(TimeZoneInfo.Local.GetUtcOffset(dateTime.DateTime)))
+                return DateTime.SpecifyKind(dateTime.DateTime, DateTimeKind.Local);
+            else
+                return dateTime.DateTime;
+        }
     }
 }
