@@ -45,7 +45,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
             document.AppendRow((from col in columnInfo select col.Header).ToList());
 
             // Output each row of data
-            if (data != null && data.FirstOrDefault() != null)
+            if (data != null)
             {
                 foreach (var dataObject in data)
                 {
@@ -62,7 +62,6 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
                     document.AppendRow(row.ToArray());
                 }
             }
-            
 
             // Enforce any attributes on columns.
             for (int i = 1; i <= columns.Count; i++)
@@ -121,7 +120,7 @@ namespace WebApiContrib.Formatting.Xlsx.Serialisation
         /// <param name="expression">The value to test.</param>
         protected static bool IsExcelSupportedType(object expression)
         {
-            return expression is String 
+            return expression is String
                 || expression is Int16
                 || expression is Int32
                 || expression is Int64
