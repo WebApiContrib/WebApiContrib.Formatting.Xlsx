@@ -59,7 +59,8 @@ namespace WebApiContrib.Formatting.Xlsx
         {
             var firstRow = skipHeaderRow ? 2 : 1;
 
-            Worksheet.Cells[firstRow, column, RowCount, column].Style.Numberformat.Format = format;
+            if (firstRow <= RowCount)
+                Worksheet.Cells[firstRow, column, RowCount, column].Style.Numberformat.Format = format;
         }
 
         public static bool IsExcelSupportedType(object expression)
