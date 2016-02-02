@@ -12,7 +12,7 @@ namespace WebApiContrib.Formatting.Xlsx
         const BindingFlags PublicInstanceBindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
         /// <summary>
-        /// Get the `Attribute` object of the specified type associated with a member. 
+        /// Get the `Attribute` object of the specified type associated with a member.
         /// </summary>
         /// <typeparam name="TAttribute">Type of attribute to get.</typeparam>
         /// <param name="memberInfo">The member to look for the attribute on.</param>
@@ -26,7 +26,7 @@ namespace WebApiContrib.Formatting.Xlsx
         }
 
         /// <summary>
-        /// Get the `Attribute` object of the specified type associated with a class. 
+        /// Get the `Attribute` object of the specified type associated with a class.
         /// </summary>
         /// <typeparam name="TAttribute">Type of attribute to get.</typeparam>
         /// <param name="memberInfo">The class to look for the attribute on.</param>
@@ -139,6 +139,8 @@ namespace WebApiContrib.Formatting.Xlsx
         /// <param name="name">The name of the field or property we want.</param>
         public static object GetFieldOrPropertyValue(object obj, string name)
         {
+            if (obj == null) return null;
+
             var type = obj.GetType();
             var member = type.GetField(name) ?? type.GetProperty(name) as MemberInfo;
 
@@ -169,6 +171,8 @@ namespace WebApiContrib.Formatting.Xlsx
         /// <param name="name">The name of the field or property we want.</param>
         public static T GetFieldOrPropertyValue<T>(object obj, string name)
         {
+            if (obj == null) return default(T);
+
             var type = obj.GetType();
             var member = type.GetField(name) ?? type.GetProperty(name) as MemberInfo;
 
@@ -180,7 +184,7 @@ namespace WebApiContrib.Formatting.Xlsx
         }
 
         /// <summary>
-        /// Determine whether a type is simple (<c>String</c>, <c>Decimal</c>, <c>DateTime</c> etc.) 
+        /// Determine whether a type is simple (<c>String</c>, <c>Decimal</c>, <c>DateTime</c> etc.)
         /// or complex (i.e. custom class with public properties and methods).
         /// </summary>
         /// <see cref="https://gist.github.com/jonathanconway/3330614"/>
@@ -191,13 +195,13 @@ namespace WebApiContrib.Formatting.Xlsx
                 type.IsValueType ||
                 type.IsPrimitive ||
                 new Type[] {
-		            typeof(string),
-		            typeof(decimal),
-		            typeof(DateTime),
-		            typeof(DateTimeOffset),
-		            typeof(TimeSpan),
-		            typeof(Guid)
-	            }.Contains(type) ||
+                    typeof(string),
+                    typeof(decimal),
+                    typeof(DateTime),
+                    typeof(DateTimeOffset),
+                    typeof(TimeSpan),
+                    typeof(Guid)
+                }.Contains(type) ||
                 Convert.GetTypeCode(type) != TypeCode.Object;
         }
 
