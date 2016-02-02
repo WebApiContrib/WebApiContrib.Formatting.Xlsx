@@ -90,7 +90,7 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var expected = new[] { new object[] { "Value1",       "Value2"       },
                                    new object[] { data[0].Value1, data[0].Value2 },
                                    new object[] { data[1].Value1, data[1].Value2 }  };
-            
+
             GenerateAndCompareWorksheet(data, expected);
         }
 
@@ -104,7 +104,7 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var excelDate = (tomorrow - new DateTime(1900, 1, 1)).TotalDays + 2;
             var excelDateStr = excelDate.ToString();
 
-            
+
             var data = new[] { new FormatStringTestItem { Value1 = tomorrow,
                                                           Value2 = tomorrow,
                                                           Value3 = tomorrow,
@@ -134,7 +134,7 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
                                                      Value2 = false,
                                                      Value3 = false,
                                                      Value4 = false },
-            
+
                                new BooleanTestItem { Value1 = true,
                                                      Value2 = true,
                                                      Value3 = null,
@@ -155,6 +155,16 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
 
             var expected = new[] { new[] { "Value1",    "Value2"    },
                                    new[] { data.Value1, data.Value2 }  };
+
+            GenerateAndCompareWorksheet(data, expected);
+        }
+
+        [TestMethod]
+        public void WriteToStreamAsync_WithEmptyListOfComplexTestItem_DoesNotCrash()
+        {
+            var data = new ComplexTestItem[0];
+
+            var expected = new[] { new object[] { "Header 4", "Value1", "Header 5", "Header 3", "Value2" } };
 
             GenerateAndCompareWorksheet(data, expected);
         }
@@ -198,7 +208,7 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var expected = new[] { new object[] { "Header 4",     "Value1",       "Header 5",                "Header 3",                "Value2"       },
                                    new object[] { data[0].Value4, data[0].Value1, data[0].Value5.ToString(), data[0].Value3.ToString(), data[0].Value2 },
                                    new object[] { data[1].Value4, data[1].Value1, data[1].Value5.ToString(), data[1].Value3.ToString(), data[1].Value2 }  };
-            
+
             var sheet = GenerateAndCompareWorksheet(data, expected);
 
             Assert.AreEqual("???.???", sheet.Cells[2, 1].Style.Numberformat.Format, "NumberFormat of A2 is incorrect.");
@@ -227,7 +237,7 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
             var expected = new[] { new object[] { "prop1",       "prop2",       "prop3"       },
                                    new object[] { data[0].prop1, data[0].prop2, data[0].prop3 },
                                    new object[] { data[1].prop1, data[1].prop2, data[1].prop3 }  };
-            
+
             GenerateAndCompareWorksheet(data, expected);
         }
 
@@ -483,7 +493,7 @@ namespace WebApiContrib.Formatting.Xlsx.Tests
         public class FakeHttpContext : HttpContextBase
         {
             private IDictionary _items = new Dictionary<string, object>();
-            
+
             public override IDictionary Items
             {
                 get
