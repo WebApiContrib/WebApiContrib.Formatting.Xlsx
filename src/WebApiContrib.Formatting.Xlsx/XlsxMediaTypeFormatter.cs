@@ -56,7 +56,7 @@ namespace WebApiContrib.Formatting.Xlsx
         public List<IXlsxSerialiser> Serialisers { get; set; }
 
         public DefaultXlsxSerialiser DefaultSerializer { get; set; }
-        
+
         #endregion
 
         #region Constructor
@@ -152,7 +152,9 @@ namespace WebApiContrib.Formatting.Xlsx
         {
             // Create a document builder.
             var document = new XlsxDocumentBuilder(writeStream);
-            
+
+            if (value == null) return document.WriteToStream();
+
             var valueType = value.GetType();
 
             // Apply cell styles.
@@ -222,7 +224,7 @@ namespace WebApiContrib.Formatting.Xlsx
                 document.Worksheet.Row(1).CustomHeight = true;
             }
         }
-        
+
         public override bool CanWriteType(Type type)
         {
             // Should be able to serialise any type.
