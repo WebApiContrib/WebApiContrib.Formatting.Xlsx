@@ -176,7 +176,7 @@ namespace WebApiContrib.Formatting.Xlsx
             var metadata = ModelMetadataProviders.Current.GetMetadataForType(null, itemType);
             
             var properties = (from p in itemType.GetProperties()
-                              where p.CanRead & p.GetGetMethod().IsPublic & p.GetGetMethod().GetParameters().Length == 0
+                              where p.CanRead && p.GetGetMethod().IsPublic && p.GetGetMethod().GetParameters().Length == 0
                               select p).ToList();
 
 
@@ -236,7 +236,7 @@ namespace WebApiContrib.Formatting.Xlsx
                         else if (info.ExcelAttribute != null && info.ExcelAttribute.FalseValue != null && cellValue.Equals("False"))
                             row.Add(info.ExcelAttribute.FalseValue);
 
-                        else if (!string.IsNullOrWhiteSpace(info.FormatString) & string.IsNullOrEmpty(info.ExcelNumberFormat))
+                        else if (!string.IsNullOrWhiteSpace(info.FormatString) && string.IsNullOrEmpty(info.ExcelNumberFormat))
                             row.Add(string.Format(info.FormatString, cellValue));
 
                         else
